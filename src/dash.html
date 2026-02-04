@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | NoteTS</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="styles/components/dash.css">
+    <style type="text/tailwindcss">
+        @custom-variant dark (&:is(.dark *));
+        :root {
+        --background: oklch(0.12 0.005 250);
+        --foreground: oklch(0.93 0 0);
+        --card: oklch(0.16 0.005 250);
+        --card-foreground: oklch(0.93 0 0);
+        --popover: oklch(0.16 0.005 250);
+        --popover-foreground: oklch(0.93 0 0);
+        --primary: oklch(0.93 0 0);
+        --primary-foreground: oklch(0.12 0.005 250);
+        --secondary: oklch(0.2 0.005 250);
+        --secondary-foreground: oklch(0.8 0 0);
+        --muted: oklch(0.22 0.005 250);
+        --muted-foreground: oklch(0.55 0 0);
+        --accent: oklch(0.68 0.16 145);
+        --accent-foreground: oklch(0.12 0.005 250);
+        --destructive: oklch(0.62 0.2 25);
+        --destructive-foreground: oklch(0.93 0 0);
+        --border: oklch(0.24 0.005 250);
+        --input: oklch(0.18 0.005 250);
+        --ring: oklch(0.68 0.16 145);
+        --chart-1: oklch(0.68 0.16 145);
+        --chart-2: oklch(0.72 0.14 45);
+        --chart-3: oklch(0.6 0.14 250);
+        --chart-4: oklch(0.65 0.12 320);
+        --chart-5: oklch(0.7 0.1 80);
+        --radius: 0.625rem;
+        --sidebar: oklch(0.14 0.005 250);
+        --sidebar-foreground: oklch(0.93 0 0);
+        --sidebar-primary: oklch(0.93 0 0);
+        --sidebar-primary-foreground: oklch(0.12 0.005 250);
+        --sidebar-accent: oklch(0.2 0.005 250);
+        --sidebar-accent-foreground: oklch(0.93 0 0);
+        --sidebar-border: oklch(0.24 0.005 250);
+        --sidebar-ring: oklch(0.68 0.16 145);
+        --success: oklch(0.68 0.16 145);
+        --warning: oklch(0.78 0.14 75);
+        --info: oklch(0.6 0.14 250);
+        }
+
+        @theme inline {
+        --color-success: var(--success);
+        --color-warning: var(--warning);
+        --color-info: var(--info);
+        --color-background: var(--background);
+        --color-foreground: var(--foreground);
+        --color-card: var(--card);
+        --color-card-foreground: var(--card-foreground);
+        --color-popover: var(--popover);
+        --color-popover-foreground: var(--popover-foreground);
+        --color-primary: var(--primary);
+        --color-primary-foreground: var(--primary-foreground);
+        --color-secondary: var(--secondary);
+        --color-secondary-foreground: var(--secondary-foreground);
+        --color-muted: var(--muted);
+        --color-muted-foreground: var(--muted-foreground);
+        --color-accent: var(--accent);
+        --color-accent-foreground: var(--accent-foreground);
+        --color-destructive: var(--destructive);
+        --color-destructive-foreground: var(--destructive-foreground);
+        --color-border: var(--border);
+        --color-input: var(--input);
+        --color-ring: var(--ring);
+        --color-chart-1: var(--chart-1);
+        --color-chart-2: var(--chart-2);
+        --color-chart-3: var(--chart-3);
+        --color-chart-4: var(--chart-4);
+        --color-chart-5: var(--chart-5);
+        --radius-sm: calc(var(--radius) - 4px);
+        --radius-md: calc(var(--radius) - 2px);
+        --radius-lg: var(--radius);
+        --radius-xl: calc(var(--radius) + 4px);
+        --color-sidebar: var(--sidebar);
+        --color-sidebar-foreground: var(--sidebar-foreground);
+        --color-sidebar-primary: var(--sidebar-primary);
+        --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+        --color-sidebar-accent: var(--sidebar-accent);
+        --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+        --color-sidebar-border: var(--sidebar-border);
+        --color-sidebar-ring: var(--sidebar-ring);
+        }
+    </style>
+</head>
+<body class="bg-background text-foreground selection:bg-accent/30 overflow-x-hidden">
+    <!-- Global Alert Banner -->
+    <div id="alert_banner" class="hidden relative bg-destructive text-destructive-foreground px-4 py-2 text-center text-xs font-bold uppercase tracking-widest z-[60]">
+        <div class="flex items-center justify-center gap-2">
+            <i data-lucide="alert-triangle" class="h-4 w-4"></i>
+            <span id="alert_message">Loading system alert...</span>
+        </div>
+        <button onclick="closeAlert()" class="absolute right-4 top-1/2 -translate-y-1/2 opacity-50 hover:opacity-100">
+            <i data-lucide="x" class="h-4 w-4"></i>
+        </button>
+    </div>
+
+    <div class="min-h-screen lg:flex">
+        <!-- Desktop Sidebar -->
+        <aside class="hidden lg:flex w-64 h-screen sticky top-0 flex-col border-r border-border bg-card">
+            <div class="p-4 border-b border-border">
+                <a href="/" class="flex items-center gap-2.5">
+                    <div class="h-8 w-8 rounded-lg flex items-center justify-center">
+                        <img src="assets/images/logo-dark.png" class="h-6 w-6">
+                    </div>
+                    <span class="font-semibold text-foreground text-sm tracking-tight">NoteTS</span>
+                </a>
+            </div>
+
+            <div class="p-4 border-b border-border">
+                <div class="flex items-center gap-3">
+                    <div class="h-10 w-10 rounded-full bg-accent/20 flex items-center justify-center">
+                        <i data-lucide="user" class="h-5 w-5 text-accent"></i>
+                    </div>
+                    <div>
+                        <p class="font-medium text-foreground text-sm" id="user_name_display">Loading...</p>
+                        <p class="text-xs text-muted-foreground" id="user_role_display">Student</p>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="flex-1 p-2 space-y-1">
+                <a href="/" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary/50">
+                    <i data-lucide="home" class="h-4 w-4"></i>
+                    Domů
+                </a>
+                <a href="/dash.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-secondary text-foreground">
+                    <i data-lucide="user" class="h-4 w-4"></i>
+                    Přehled
+                </a>
+                <a href="/info.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary/50">
+                    <i data-lucide="bell" class="h-4 w-4"></i>
+                    Školní info
+                </a>
+            </nav>
+            
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 min-w-0 bg-background">
+            <header class="lg:hidden sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border">
+                <div class="flex items-center justify-between p-4">
+                    <div class="flex items-center gap-2.5">
+                        <img src="assets/images/logo-dark.png" class="h-6 w-6">
+                        <span class="font-semibold text-foreground text-sm tracking-tight">NoteTS</span>
+                    </div>
+                    <button id="mobile-menu-toggle" class="p-2 hover:bg-secondary rounded-lg">
+                        <i data-lucide="menu" class="h-5 w-5"></i>
+                    </button>
+                </div>
+            </header>
+
+            <div class="p-4 lg:p-8 max-w-7xl mx-auto space-y-8">
+                <!-- Welcome Section -->
+                <div>
+                    <p class="text-muted-foreground text-sm font-medium mb-1" id="date_display">Loading date...</p>
+                    <h1 class="text-3xl font-bold tracking-tight text-foreground" id="greeting_display">Dashboard</h1>
+                </div>
+
+                <div>
+                    <p class="text-muted-foreground text-sm font-medium mb-1" id="date_display">Loading date...</p>
+                    <h1 class="text-3xl font-bold tracking-tight text-foreground" id="greeting_display">Dashboard</h1>
+                </div>
+
+                <div class="grid lg:grid-cols-3 gap-8">
+                    <!-- Left Column: Schedule & Info -->
+                    <div class="lg:col-span-2 space-y-8">
+                        <!-- Current Info Card -->
+                        <div class="p-6 rounded-2xl bg-accent/5 border border-accent/20 flex flex-col md:flex-row md:items-center justify-between gap-6 overflow-hidden relative">
+                            <div class="absolute -right-8 -bottom-8 opacity-[0.03] rotate-12">
+                                <i data-lucide="clock-8" class="h-48 w-48"></i>
+                            </div>
+                            <div class="space-y-2 relative z-10">
+                                <span class="px-2 py-0.5 rounded-full bg-accent/15 text-accent text-[10px] font-bold uppercase tracking-widest">Právě teď</span>
+                                <h3 class="text-xl font-bold" id="current_subject">No current classes</h3>
+                                <p class="text-sm text-muted-foreground flex items-center gap-3">
+                                    <span class="flex items-center gap-1.5"><i data-lucide="user" class="h-4 w-4"></i> <span id="current_teacher">-</span></span>
+                                    <span class="flex items-center gap-1.5"><i data-lucide="map-pin" class="h-4 w-4"></i> <span id="current_room">-</span></span>
+                                </p>
+                            </div>
+                            <div class="text-right relative z-10">
+                                <p class="text-3xl font-mono font-bold tracking-tighter" id="clock_display">00:00:00</p>
+                                <p class="text-xs text-muted-foreground" id="next_class_timer">System synced</p>
+                            </div>
+                        </div>
+
+                        <!-- Schedule Section -->
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="calendar" class="h-5 w-5 text-muted-foreground"></i>
+                                <h2 class="text-xl font-bold text-foreground">Dnešní rozvrh</h2>
+                            </div>
+                            <div class="rounded-2xl border border-border bg-card overflow-hidden" id="schedule_list">
+                                <div class="p-12 text-center text-muted-foreground italic">
+                                    <p class="text-sm">Načítání rozvrhu...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Announcements & Updates -->
+                    <div class="space-y-8">
+                        <!-- Announcements Section -->
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <i data-lucide="megaphone" class="h-5 w-5 text-muted-foreground"></i>
+                                    <h2 class="text-xl font-bold">Oznámení</h2>
+                                </div>
+                                <span class="text-[10px] font-bold text-muted-foreground px-2 py-0.5 rounded-full bg-secondary" id="ann_count">0</span>
+                            </div>
+                            <div class="space-y-3" id="announcements_container">
+                                <!-- Items will be injected here -->
+                            </div>
+                        </div>
+
+                        <!-- Updates Section -->
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="history" class="h-5 w-5 text-muted-foreground"></i>
+                                <h2 class="text-xl font-bold">Změny & Updaty</h2>
+                            </div>
+                            <div class="space-y-3" id="updates_container">
+                                <!-- Updates will be injected here -->
+                            </div>
+                        </div>
+                        
+                        <!-- Mini Stats -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="p-4 rounded-2xl bg-card border border-border space-y-1">
+                                <div class="flex items-center gap-1.5 text-muted-foreground">
+                                    <i data-lucide="trending-up" class="h-3.5 w-3.5"></i>
+                                    <span class="text-[10px] font-bold uppercase tracking-wider">Úspěšnost</span>
+                                </div>
+                                <p class="text-lg font-bold">96%</p>
+                            </div>
+                            <div class="p-4 rounded-2xl bg-card border border-border space-y-1">
+                                <div class="flex items-center gap-1.5 text-muted-foreground">
+                                    <i data-lucide="clock" class="h-3.5 w-3.5"></i>
+                                    <span class="text-[10px] font-bold uppercase tracking-wider">Absence</span>
+                                </div>
+                                <p class="text-lg font-bold">12 hod</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const API_BASE = '/api';
+        let currentUser = null;
+        let currentFormType = '';
+
+        // --- Core Helpers ---
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return null;
+        }
+
+        async function apiFetch(endpoint, options = {}) {
+            try {
+                const response = await fetch(`${API_BASE}${endpoint}`, options);
+                return await response.json();
+            } catch (error) {
+                console.error(`API Error (${endpoint}):`, error);
+                return { error: 'Failed to fetch' };
+            }
+        }
+
+        // --- Init ---
+        async function init() {
+            lucide.createIcons();
+            updateClock();
+            setInterval(updateClock, 1000);
+            
+            await fetchUserData();
+            await fetchEverything();
+            
+            // Refresh periodic data
+            setInterval(fetchEverything, 30000);
+        }
+
+        function updateClock() {
+            const now = new Date();
+            if (document.getElementById('clock_display')) document.getElementById('clock_display').textContent = now.toLocaleTimeString('cs-CZ');
+            if (document.getElementById('date_display')) document.getElementById('date_display').textContent = now.toLocaleDateString('cs-CZ', { weekday: 'long', day: 'numeric', month: 'long' });
+        }
+
+        async function fetchEverything() {
+            await Promise.all([
+                fetchAnnouncements(),
+                fetchSchedules(),
+                fetchAlerts(),
+                fetchUpdates()
+            ]);
+        }
+
+        // --- Data Fetching ---
+        async function fetchUserData() {
+            const userId = getCookie('userId');
+            if (!userId) { window.location.href = '/login.html'; return; }
+
+            const res = await apiFetch('/users');
+            if (res.data) {
+                currentUser = res.data.find(u => u.id === userId);
+                if (currentUser) {
+                    document.getElementById('user_name_display').textContent = currentUser.name;
+                    document.getElementById('greeting_display').textContent = `Dobré ${new Date().getHours() < 12 ? 'ráno' : 'odpoledne'}, ${currentUser.name.split(' ')[0]}`;
+                }
+            }
+        }
+
+        async function fetchAnnouncements() {
+            const res = await apiFetch('/announcements');
+            const container = document.getElementById('announcements_container');
+            if (res.data) {
+                document.getElementById('ann_count').textContent = res.data.length;
+                container.innerHTML = res.data.length ? res.data.slice().reverse().map(ann => `
+                    <div class="p-4 rounded-xl border border-border bg-card group hover:scale-[1.02] transition-all">
+                        <div class="flex items-start gap-3">
+                            <div class="h-2 w-2 rounded-full mt-2 shrink-0 ${ann.type === 'urgent' ? 'bg-destructive shadow-[0_0_8px_rgba(255,0,0,0.5)]' : ann.type === 'sports' ? 'bg-chart-2' : 'bg-accent'}"></div>
+                            <div class="space-y-1">
+                                <h4 class="text-sm font-bold text-foreground">${ann.title}</h4>
+                                <p class="text-xs text-muted-foreground leading-relaxed">${ann.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('') : '<div class="p-6 text-center text-xs text-muted-foreground border border-dashed border-border rounded-xl">Žádná oznámení</div>';
+            }
+        }
+
+        async function fetchSchedules() {
+            const res = await apiFetch('/schedules');
+            const container = document.getElementById('schedule_list');
+            if (res.data && res.data[0]) {
+                const day = Math.min(new Date().getDay() - 1, 4);
+                const periods = res.data[0].periods[day === -1 ? 0 : day] || [];
+                container.innerHTML = periods.map((p, i) => `
+                    <div class="flex items-center gap-4 p-4 hover:bg-accent/5 border-b border-border last:border-0 group">
+                        <div class="h-9 w-9 rounded-xl bg-secondary text-secondary-foreground text-xs font-bold flex items-center justify-center shrink-0 group-hover:bg-accent group-hover:text-accent-foreground transition-colors">
+                            ${i + 1}
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-bold text-foreground">${p.name}</p>
+                            <p class="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">${p.teacher} · ${p.room}</p>
+                        </div>
+                        <i data-lucide="chevron-right" class="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                    </div>
+                `).join('');
+                lucide.createIcons();
+            }
+        }
+
+        async function fetchAlerts() {
+            const res = await apiFetch('/alerts');
+            const banner = document.getElementById('alert_banner');
+            const msg = document.getElementById('alert_message');
+            if (res.data && res.data.length > 0) {
+                const latest = res.data[res.data.length - 1];
+                msg.textContent = latest.message;
+                banner.classList.remove('hidden');
+                lucide.createIcons();
+            } else {
+                banner.classList.add('hidden');
+            }
+        }
+
+        async function fetchUpdates() {
+            const res = await apiFetch('/updates');
+            const container = document.getElementById('updates_container');
+            if (res.data) {
+                container.innerHTML = res.data.length ? res.data.slice().reverse().map(up => `
+                    <div class="flex items-start gap-3 p-1">
+                        <i data-lucide="check-circle-2" class="h-4 w-4 text-accent shrink-0"></i>
+                        <p class="text-xs text-muted-foreground leading-snug">${up.message}</p>
+                    </div>
+                `).join('') : '<p class="text-center text-xs text-muted-foreground py-4">Žádné nové updaty</p>';
+                lucide.createIcons();
+            }
+        }
+
+        function closeAlert() { document.getElementById('alert_banner').classList.add('hidden'); }
+
+        init();
+    </script>
+</body>
+</html>

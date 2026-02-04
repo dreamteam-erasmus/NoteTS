@@ -30,8 +30,10 @@
             })).json()
             console.log(json);
 
-            if (json.data == true) {
-
+            if (json.data === true) {
+                window.location.href = "/dash.html";
+            } else {
+                alert("Přihlášení se nezdařilo. Zkontrolujte jméno a heslo.");
             }
         })
     </script>
