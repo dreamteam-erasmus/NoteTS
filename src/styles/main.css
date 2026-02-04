@@ -1,4 +1,7 @@
 /* Basic styles */
+
+@import url(components/login.css);
+
 body {
     background-color: black !important;
 
