@@ -32,14 +32,26 @@ router.get('/', (_req: Request, res: Response) => {
 // ===================
 // POST /api/schedules
 // ===================
-// router.post('/', (req: Request, res: Response) => {
-//     const scheduleData: Schedule = req.body;
-//     console.log(scheduleData)
-//     appendSchedule(new Schedule(scheduleData.title, scheduleData.type,scheduleData.time, scheduleData.location))
-//     res.status(201).json({
-//         data: scheduleData,
-//         message: 'Schedule created',
-//     });
-// });
+// ===================
+// POST /api/schedules
+// ===================
+router.post('/', (req: Request, res: Response) => {
+    const { periods } = req.body;
+    if (!periods) return res.status(400).json({ error: 'Missing periods data' });
+
+    // For now, we manage a single global schedule. 
+    // We clear existing ones and add the new one.
+    const newSchedule = new Schedule(periods);
+
+    // Accessing internal array and saving
+    const schedules = getSchedules();
+    schedules.length = 0; // Clear array
+    appendSchedule(newSchedule);
+
+    res.status(201).json({
+        data: newSchedule,
+        message: 'Schedule saved successfully',
+    });
+});
 
 export default router;

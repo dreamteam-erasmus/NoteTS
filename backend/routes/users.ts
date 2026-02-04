@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { appendUser, getUserByName, getUsers } from '../dataManager/userDB.js';
+import { appendUser, deleteUser, getUserById, getUserByName, getUsers, saveUserDB } from '../dataManager/userDB.js';
 import { CreateUserDto, User } from "../types/index.js";
 import { hash, randomBytes } from "crypto";
 import { getAnnouncements } from '../dataManager/announcementsDB.js';
@@ -35,7 +35,7 @@ router.get('/', (_req: Request, res: Response) => {
 router.post('/', (req: Request, res: Response) => {
     const userData: User = req.body;
     console.log(userData)
-    appendUser(new User(userData.email, userData.name, userData.password,userData.isAdmin))
+    appendUser(new User(userData.email, userData.name, userData.password, userData.isAdmin))
     res.status(201).json({
         data: userData,
         message: 'User created',
@@ -47,7 +47,7 @@ router.post('/', (req: Request, res: Response) => {
 // ===================
 router.post('/login', (req: Request, res: Response) => {
     console.log("Checking login");
-    
+
     const userData: User = req.body;
     console.log(userData);
     const user = getUserByName(userData.name)
@@ -73,15 +73,38 @@ router.post('/login', (req: Request, res: Response) => {
 
     //Login OK
     var cookieValue = randomBytes(26).toString('hex')
-    tokens.set(cookieValue,user.id)
+    tokens.set(cookieValue, user.id)
     console.log("Setting cookies");
-    
+
     res.cookie("login", cookieValue)
     res.cookie("userId", user.id)
     res.status(201).json({
         data: true,
         message: 'Login success',
     });
+});
+
+// ===================
+// DELETE /api/users
+// ===================
+router.delete('/', (req: Request, res: Response) => {
+    const { id } = req.body;
+    if (!id) return res.status(400).json({ error: 'Missing ID' });
+    deleteUser(id);
+    res.json({ message: 'User deleted' });
+});
+
+// ===================
+// PATCH /api/users/toggle-admin
+// ===================
+router.patch('/toggle-admin', (req: Request, res: Response) => {
+    const { id } = req.body;
+    if (!id) return res.status(400).json({ error: 'Missing ID' });
+    const user = getUserById(id);
+    if (!user) return res.status(404).json({ error: 'User not found' });
+    user.isAdmin = !user.isAdmin;
+    saveUserDB();
+    res.json({ data: user.isAdmin, message: 'Admin status toggled' });
 });
 
 //// ===================

@@ -8,13 +8,13 @@ export async function loadUserDB() {
         //File does not exists
         await saveUserDB()
     }
-    users = JSON.parse(await readFile("./database/users.json","utf-8")) 
+    users = JSON.parse(await readFile("./database/users.json", "utf-8"))
     console.log("User DB loaded!");
 }
 
 export async function saveUserDB() {
     console.log("Saving user DB...");
-    await writeFile("./database/users.json",JSON.stringify(users))
+    await writeFile("./database/users.json", JSON.stringify(users))
     console.log("User DB saved!")
 }
 
@@ -24,7 +24,7 @@ export function getUsers(): User[] {
 
 export function getUserByName(name: string): User | null {
     for (const element of users) {
-        if(element.name == name) {
+        if (element.name == name) {
             return element
         }
     }
@@ -33,11 +33,16 @@ export function getUserByName(name: string): User | null {
 
 export function getUserById(id: string): User | null {
     for (const element of users) {
-        if(element.id == id) {
+        if (element.id == id) {
             return element
         }
     }
     return null;
+}
+
+export function deleteUser(id: string) {
+    users = users.filter(u => u.id !== id);
+    saveUserDB();
 }
 
 export function appendUser(user: User) {
