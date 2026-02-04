@@ -8,13 +8,13 @@ export async function loadAnnouncementsDB() {
         //File does not exists
         await saveAnnouncementsDB()
     }
-    announcements = JSON.parse(await readFile("./database/announcements.json","utf-8")) 
+    announcements = JSON.parse(await readFile("./database/announcements.json", "utf-8"))
     console.log("Announcements DB loaded!");
 }
 
 export async function saveAnnouncementsDB() {
     console.log("Saving announcements DB...");
-    await writeFile("./database/announcements.json",JSON.stringify(announcements))
+    await writeFile("./database/announcements.json", JSON.stringify(announcements))
     console.log("Announcements DB saved!")
 }
 
@@ -29,15 +29,6 @@ export function appendAnnouncement(announcement: Announcement) {
 
 
 export function deleteAnnouncement(announcementId: string) {
-    let announcementGet: Announcement | null = null
-    for (const element of announcements) {
-        if(announcementId == element.id) {
-        announcementGet = element
-        }
-    }
-    if (announcementGet == null) {
-        return
-    }
-    announcements = announcements.filter(announcement => announcement != announcementGet)
+    announcements = announcements.filter(announcement => announcement.id !== announcementId)
     saveAnnouncementsDB()
 }

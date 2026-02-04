@@ -2,7 +2,7 @@ import { Router, Request, Response } from 'express';
 import { appendUser, getUserByName, getUsers } from '../dataManager/userDB.js';
 import { Schedule, CreateUserDto, User } from "../types/index.js";
 import { hash, randomBytes } from "crypto";
-import { appendSchedule, getSchedules } from '../dataManager/schedulesDB.js';
+import { appendSchedule, deleteSchedule, getSchedules } from '../dataManager/schedulesDB.js';
 
 const router = Router();
 
@@ -22,18 +22,6 @@ router.get('/', (req: Request, res: Response) => {
         message: 'Get schedules',
     });
 });
-
-// ===================
-// GET /api/users/:id
-// ===================
-//router.get('/:id', (req: Request, res: Response) => {
-//    const { id } = req.params;
-//    // TODO: Fetch user by ID from database
-//    res.json({
-//        data: { id },
-//        message: `Get user ${id}`,
-//    });
-//});
 
 // ===================
 // POST /api/schedules
@@ -57,6 +45,16 @@ router.post('/', (req: Request, res: Response) => {
         data: newSchedule,
         message: `Schedule saved for class ${classId || 'Global'}`,
     });
+});
+
+// ===================
+// DELETE /api/schedules
+// ===================
+router.delete('/', (req: Request, res: Response) => {
+    const { id } = req.body;
+    if (!id) return res.status(400).json({ error: 'Missing ID' });
+    deleteSchedule(id);
+    res.json({ message: 'Schedule deleted' });
 });
 
 export default router;

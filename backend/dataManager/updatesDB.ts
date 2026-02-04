@@ -8,13 +8,13 @@ export async function loadUpdateDB() {
         //File does not exists
         await saveUpdateDB()
     }
-    updates = JSON.parse(await readFile("./database/updates.json","utf-8")) 
+    updates = JSON.parse(await readFile("./database/updates.json", "utf-8"))
     console.log("Update DB loaded!");
 }
 
 export async function saveUpdateDB() {
     console.log("Saving update DB...");
-    await writeFile("./database/updates.json",JSON.stringify(updates))
+    await writeFile("./database/updates.json", JSON.stringify(updates))
     console.log("Update DB saved!")
 }
 
@@ -28,16 +28,7 @@ export function appendUpdate(update: Update) {
 }
 
 
-export function deleteUpdate(alertId: string) {
-    let updateGet: Update | null = null
-    for (const element of updates) {
-        if(alertId == element.id) {
-        updateGet = element
-        }
-    }
-    if (updateGet == null) {
-        return
-    }
-    updates = updates.filter(update => update != updateGet)
+export function deleteUpdate(updateId: string) {
+    updates = updates.filter(update => update.id !== updateId)
     saveUpdateDB()
 }

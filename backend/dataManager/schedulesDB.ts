@@ -8,13 +8,13 @@ export async function loadScheduleDB() {
         //File does not exists
         await saveScheduleDB()
     }
-    schedules = JSON.parse(await readFile("./database/schedules.json","utf-8")) 
+    schedules = JSON.parse(await readFile("./database/schedules.json", "utf-8"))
     console.log("Schedule DB loaded!");
 }
 
 export async function saveScheduleDB() {
     console.log("Saving schedule DB...");
-    await writeFile("./database/schedules.json",JSON.stringify(schedules))
+    await writeFile("./database/schedules.json", JSON.stringify(schedules))
     console.log("Schedule DB saved!")
 }
 
@@ -25,4 +25,9 @@ export function getSchedules(): Schedule[] {
 export function appendSchedule(schedule: Schedule) {
     schedules.push(schedule)
     saveScheduleDB()
+}
+
+export function deleteSchedule(id: string) {
+    schedules = schedules.filter(s => s.id !== id);
+    saveScheduleDB();
 }

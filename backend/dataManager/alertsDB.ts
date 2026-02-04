@@ -8,13 +8,13 @@ export async function loadAlertDB() {
         //File does not exists
         await saveAlertDB()
     }
-    alerts = JSON.parse(await readFile("./database/alerts.json","utf-8")) 
+    alerts = JSON.parse(await readFile("./database/alerts.json", "utf-8"))
     console.log("Alert DB loaded!");
 }
 
 export async function saveAlertDB() {
     console.log("Saving alert DB...");
-    await writeFile("./database/alerts.json",JSON.stringify(alerts))
+    await writeFile("./database/alerts.json", JSON.stringify(alerts))
     console.log("Alert DB saved!")
 }
 
@@ -28,15 +28,6 @@ export function appendAlert(alert: Alert) {
 }
 
 export function deleteAlert(alertId: string) {
-    let alertGet: Alert | null = null
-    for (const element of alerts) {
-        if(alertId == element.id) {
-        alertGet = element
-        }
-    }
-    if (alertGet == null) {
-        return
-    }
-    alerts = alerts.filter(alert => alert != alertGet)
+    alerts = alerts.filter(alert => alert.id !== alertId)
     saveAlertDB()
 }

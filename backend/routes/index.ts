@@ -1,4 +1,4 @@
-import { Router,static as static_ } from 'express';
+import { Router, static as static_ } from 'express';
 
 // Import route modules
 import usersRouter from './users.js';
@@ -27,7 +27,7 @@ router.get('/', (_req, res) => {
             users: '/api/users',
             announcements: '/api/announcements',
             events: '/api/events',
-            alerts: '/api/alers',
+            alerts: '/api/alerts',
             updates: '/api/updates',
             schedule: '/api/schedules',
         },
