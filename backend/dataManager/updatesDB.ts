@@ -1,3 +1,4 @@
+import { randomUUID } from "crypto";
 import { readFile, writeFile } from "fs/promises";
 import { existsSync } from "fs";
 import { Update } from "../types/index.js";
@@ -9,6 +10,16 @@ export async function loadUpdateDB() {
         await saveUpdateDB()
     }
     updates = JSON.parse(await readFile("./database/updates.json", "utf-8"))
+
+    let fixed = false;
+    updates.forEach(up => {
+        if (!up.id) {
+            up.id = randomUUID();
+            fixed = true;
+        }
+    });
+    if (fixed) await saveUpdateDB();
+
     console.log("Update DB loaded!");
 }
 

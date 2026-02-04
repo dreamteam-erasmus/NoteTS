@@ -1,3 +1,4 @@
+import { randomUUID } from "crypto";
 import { readFile, writeFile } from "fs/promises";
 import { existsSync } from "fs";
 import { Announcement } from "../types/index.js";
@@ -9,6 +10,17 @@ export async function loadAnnouncementsDB() {
         await saveAnnouncementsDB()
     }
     announcements = JSON.parse(await readFile("./database/announcements.json", "utf-8"))
+
+    // Ensure all announcements have IDs
+    let fixed = false;
+    announcements.forEach(ann => {
+        if (!ann.id) {
+            ann.id = randomUUID();
+            fixed = true;
+        }
+    });
+    if (fixed) await saveAnnouncementsDB();
+
     console.log("Announcements DB loaded!");
 }
 

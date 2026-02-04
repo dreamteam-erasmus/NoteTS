@@ -1,3 +1,4 @@
+import { randomUUID } from "crypto";
 import { readFile, writeFile } from "fs/promises";
 import { existsSync } from "fs";
 import { Alert } from "../types/index.js";
@@ -9,6 +10,16 @@ export async function loadAlertDB() {
         await saveAlertDB()
     }
     alerts = JSON.parse(await readFile("./database/alerts.json", "utf-8"))
+
+    let fixed = false;
+    alerts.forEach(al => {
+        if (!al.id) {
+            al.id = randomUUID();
+            fixed = true;
+        }
+    });
+    if (fixed) await saveAlertDB();
+
     console.log("Alert DB loaded!");
 }
 

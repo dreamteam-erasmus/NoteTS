@@ -1,3 +1,4 @@
+import { randomUUID } from "crypto";
 import { readFile, writeFile } from "fs/promises";
 import { existsSync } from "fs";
 import { Schedule } from "../types/index.js";
@@ -9,6 +10,16 @@ export async function loadScheduleDB() {
         await saveScheduleDB()
     }
     schedules = JSON.parse(await readFile("./database/schedules.json", "utf-8"))
+
+    let fixed = false;
+    schedules.forEach(s => {
+        if (!s.id) {
+            s.id = randomUUID();
+            fixed = true;
+        }
+    });
+    if (fixed) await saveScheduleDB();
+
     console.log("Schedule DB loaded!");
 }
 
