@@ -4,6 +4,7 @@ import { CreateUserDto, User } from "../types/index.js";
 import { hash, randomBytes } from "crypto";
 import { getAnnouncements } from '../dataManager/announcementsDB.js';
 
+export const tokens: Map<string, string> = new Map()
 const router = Router();
 
 // ===================
@@ -34,7 +35,7 @@ router.get('/', (_req: Request, res: Response) => {
 router.post('/', (req: Request, res: Response) => {
     const userData: User = req.body;
     console.log(userData)
-    appendUser(new User(userData.email, userData.name, userData.password))
+    appendUser(new User(userData.email, userData.name, userData.password,userData.isAdmin))
     res.status(201).json({
         data: userData,
         message: 'User created',
@@ -72,7 +73,11 @@ router.get('/login', (req: Request, res: Response) => {
 
     //Login OK
     var cookieValue = randomBytes(26).toString('hex')
+    tokens.set(cookieValue,user.id)
+    console.log("Setting cookies");
+    
     res.cookie("login", cookieValue)
+    res.cookie("userId", user.id)
     res.status(201).json({
         data: true,
         message: 'Login success',

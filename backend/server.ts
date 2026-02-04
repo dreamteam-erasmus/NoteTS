@@ -10,6 +10,7 @@ import { loadEventsDB } from './dataManager/eventsDB.js';
 import { loadAlertDB as loadAlertsDB } from './dataManager/alertsDB.js';
 import { loadUpdateDB as loadUpdatesDB } from './dataManager/updatesDB.js';
 import { loadScheduleDB } from './dataManager/schedulesDB.js';
+import { authCheck, authCheckAdmin, authenticate, authenticateAdmin } from './middleware/auth.js';
 
 // Initialize Express app
 const app: Application = express();
@@ -42,6 +43,22 @@ app.use((req: Request, _res: Response, next: NextFunction) => {
 app.get('/health', (_req: Request, res: Response) => {
     res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
+app.get('/login', (_req: Request, res: Response) => {
+    res.sendFile("login.html", { root: "./src" })
+});
+
+//Get restricted
+app.get('/dash', (_req: Request, res: Response) => {
+    if (authCheck(_req, res)) {
+        res.sendFile("dash.html", { root: "./src" })
+    }
+});
+app.get('/admin', (_req: Request, res: Response) => {
+    if (authCheckAdmin(_req,res)) {
+    res.sendFile("admin.html", { root: "./src" })
+    }
+});
+
 
 // API routes
 app.use('/api', apiRouter);
@@ -60,6 +77,7 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
     console.error('Error:', err.message);
     res.status(500).json({ error: 'Internal Server Error' });
 });
+
 
 //Load DB
 await loadUserDB()

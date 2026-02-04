@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router,static as static_ } from 'express';
 
 // Import route modules
 import usersRouter from './users.js';

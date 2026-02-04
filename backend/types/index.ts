@@ -11,14 +11,16 @@ export class User {
     name: string;
     createdAt: Date;
     updatedAt: Date;
+    isAdmin: boolean
 
-    public constructor(email: string, name: string, password: string) {
+    public constructor(email: string, name: string, password: string, isAdmin: boolean) {
         this.id = randomUUID()
         this.email = email
         this.name = name;
         this.createdAt = new Date()
         this.updatedAt = new Date()
         this.password = hash("sha256",password) 
+        this.isAdmin = isAdmin
     }
 }
 

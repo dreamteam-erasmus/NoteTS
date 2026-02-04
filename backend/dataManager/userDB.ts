@@ -31,6 +31,15 @@ export function getUserByName(name: string): User | null {
     return null;
 }
 
+export function getUserById(id: string): User | null {
+    for (const element of users) {
+        if(element.id == id) {
+            return element
+        }
+    }
+    return null;
+}
+
 export function appendUser(user: User) {
     users.push(user)
     saveUserDB()
