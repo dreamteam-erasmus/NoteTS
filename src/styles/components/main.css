@@ -101,3 +101,26 @@ hr {
     color: white;
     font-size: 1.1em;
 }
+
+/* Admin Page Specifics */
+#left-admin-panel {
+    border-right: 1px solid rgb(140, 140, 140);
+    border-top: 1px solid rgb(0, 0, 0);
+}
+#left-admin-panel .box:hover {
+    background-color: rgb(40, 40, 45);
+    cursor: pointer;
+}
+#adminUserName {
+    font-size: 1.5em;
+}
+.numbersFix {
+    font-size: 2.5em;
+    font-weight: bold;
+}
+#adminMain {
+    height: 70vh;
+}
+.adminHR {
+    width: 100%;
+}
