@@ -43,9 +43,9 @@ router.post('/', (req: Request, res: Response) => {
 });
 
 // ===================
-// GET /api/users/login
+// POST /api/users/login
 // ===================
-router.get('/login', (req: Request, res: Response) => {
+router.post('/login', (req: Request, res: Response) => {
     console.log("Checking login");
     
     const userData: User = req.body;

@@ -1,15 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="styles/main.css">
 </head>
+
 <body>
     <input type="text" id="login"> <br>
     <input type="password" id="password"> <br>
     <button id="loginBtn">Login</button>
-    <script type="module" src="/scripts/login.ts"></script>
+    <script>
+        const loginInput = document.getElementById("login")
+        const passwordInput = document.getElementById("password")        
+        document.getElementById("loginBtn")?.addEventListener("click", async () => {
+                    console.log(loginInput.value);
+        console.log(passwordInput.value);
+            const json = await (await fetch("/api/users/login", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: loginInput.value,
+                    password: passwordInput.value
+                })
+            })).json()
+            console.log(json);
+
+            if (json.data == true) {
+
+            }
+        })
+    </script>
 </body>
+
 </html>

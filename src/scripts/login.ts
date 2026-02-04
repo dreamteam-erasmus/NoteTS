@@ -11,7 +11,9 @@ document.getElementById("loginBtn")?.addEventListener("click", async () => {
             password:  passwordInput.value
         })
     })).json()
+    console.log(json);
+    
     if (json.data == true) {
-        
+
     }
 })

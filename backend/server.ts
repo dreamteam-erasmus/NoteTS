@@ -46,6 +46,10 @@ app.get('/health', (_req: Request, res: Response) => {
 app.get('/login', (_req: Request, res: Response) => {
     res.sendFile("login.html", { root: "./src" })
 });
+app.get('/scripts/login.ts', (_req: Request, res: Response) => {
+    res.type("application/javascript");
+    res.sendFile("login.ts", { root: "./src/scripts" })
+});
 
 //Get restricted
 app.get('/dash', (_req: Request, res: Response) => {
