@@ -9,17 +9,19 @@ export class User {
     email: string;
     password: string;
     name: string;
+    classId: string;
     createdAt: Date;
     updatedAt: Date;
     isAdmin: boolean
 
-    public constructor(email: string, name: string, password: string, isAdmin: boolean) {
+    public constructor(email: string, name: string, password: string, isAdmin: boolean, classId: string = "") {
         this.id = randomUUID()
         this.email = email
         this.name = name;
+        this.classId = classId;
         this.createdAt = new Date()
         this.updatedAt = new Date()
-        this.password = hash("sha256",password) 
+        this.password = hash("sha256", password)
         this.isAdmin = isAdmin
     }
 }
@@ -95,10 +97,10 @@ export class Schedule {
     id: string
     classId: string
 
-    constructor(periods: SchedulePeriods[][]) {
+    constructor(periods: SchedulePeriods[][], classId: string = "") {
         this.periods = periods
         this.id = randomUUID()
-        this.classId = ""
+        this.classId = classId
     }
 
     setClass(classId: string) {
@@ -106,18 +108,11 @@ export class Schedule {
     }
 }
 
-export class SchedulePeriods {
-    id: string
+export interface SchedulePeriods {
+    id?: string
     name: string
     teacher: string
     room: string
-
-    constructor(name: string, teacher: string, room: string) {
-        this.id = randomUUID()
-        this.name = name
-        this.teacher = teacher
-        this.room = room
-    }
 }
 
 export interface CreateUserDto {

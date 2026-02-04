@@ -9,11 +9,17 @@ const router = Router();
 // ===================
 // GET /api/schedules
 // ===================
-router.get('/', (_req: Request, res: Response) => {
-    // TODO: Fetch schedules from database
+router.get('/', (req: Request, res: Response) => {
+    const { classId } = req.query;
+    let schedules = getSchedules();
+
+    if (classId) {
+        schedules = schedules.filter(s => s.classId === classId);
+    }
+
     res.json({
-        data: getSchedules(),
-        message: 'Get all schedules',
+        data: schedules,
+        message: 'Get schedules',
     });
 });
 
@@ -32,25 +38,24 @@ router.get('/', (_req: Request, res: Response) => {
 // ===================
 // POST /api/schedules
 // ===================
-// ===================
-// POST /api/schedules
-// ===================
 router.post('/', (req: Request, res: Response) => {
-    const { periods } = req.body;
+    const { periods, classId } = req.body;
     if (!periods) return res.status(400).json({ error: 'Missing periods data' });
 
-    // For now, we manage a single global schedule. 
-    // We clear existing ones and add the new one.
-    const newSchedule = new Schedule(periods);
-
-    // Accessing internal array and saving
+    // We clear existing schedule for this specific class if it exists
     const schedules = getSchedules();
-    schedules.length = 0; // Clear array
+    const existingIdx = schedules.findIndex(s => s.classId === (classId || ""));
+
+    if (existingIdx !== -1) {
+        schedules.splice(existingIdx, 1);
+    }
+
+    const newSchedule = new Schedule(periods, classId || "");
     appendSchedule(newSchedule);
 
     res.status(201).json({
         data: newSchedule,
-        message: 'Schedule saved successfully',
+        message: `Schedule saved for class ${classId || 'Global'}`,
     });
 });
 

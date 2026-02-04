@@ -33,11 +33,12 @@ router.get('/', (_req: Request, res: Response) => {
 // POST /api/users
 // ===================
 router.post('/', (req: Request, res: Response) => {
-    const userData: User = req.body;
+    const userData: any = req.body;
     console.log(userData)
-    appendUser(new User(userData.email, userData.name, userData.password, userData.isAdmin))
+    const newUser = new User(userData.email, userData.name, userData.password, userData.isAdmin, userData.classId || "");
+    appendUser(newUser);
     res.status(201).json({
-        data: userData,
+        data: newUser,
         message: 'User created',
     });
 });
