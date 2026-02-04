@@ -2,11 +2,19 @@ import { Router } from 'express';
 
 // Import route modules
 import usersRouter from './users.js';
+import announcementsRouter from './announcements.js';
+import eventRouter from './events.js';
+import updateRouter from './updates.js';
+import alersRouter from './alerts.js';
 
 const router = Router();
 
 // Mount route modules
 router.use('/users', usersRouter);
+router.use('/announcements', announcementsRouter);
+router.use('/events', eventRouter);
+router.use('/alerts', alersRouter);
+router.use('/updates', updateRouter);
 
 // API root endpoint
 router.get('/', (_req, res) => {
@@ -15,6 +23,10 @@ router.get('/', (_req, res) => {
         version: '1.0.0',
         endpoints: {
             users: '/api/users',
+            announcements: '/api/announcements',
+            events: '/api/events',
+            alerts: '/api/alers',
+            updates: '/api/updates',
         },
     });
 });

@@ -1,8 +1,12 @@
 import express, { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
 // Import routes
 import apiRouter from './routes/index.js';
+import { loadUserDB } from './dataManager/userDB.js';
+import { loadAnnouncementsDB } from './dataManager/announcementsDB.js';
+import { loadEventsDB } from './dataManager/eventsDB.js';
 
 // Initialize Express app
 const app: Application = express();
@@ -54,9 +58,16 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
     res.status(500).json({ error: 'Internal Server Error' });
 });
 
+//Load DB
+await loadUserDB()
+await loadAnnouncementsDB()
+await loadEventsDB()
+
 // ===================
 // Start Server
 // ===================
+
+app.use(cookieParser())
 
 app.listen(PORT, () => {
     console.log(`🚀 Server running on http://localhost:${PORT}`);
