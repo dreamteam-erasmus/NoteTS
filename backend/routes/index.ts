@@ -5,7 +5,8 @@ import usersRouter from './users.js';
 import announcementsRouter from './announcements.js';
 import eventRouter from './events.js';
 import updateRouter from './updates.js';
-import alersRouter from './alerts.js';
+import alertRouter from './alerts.js';
+import scheduleRouter from './schedules.js';
 
 const router = Router();
 
@@ -13,8 +14,9 @@ const router = Router();
 router.use('/users', usersRouter);
 router.use('/announcements', announcementsRouter);
 router.use('/events', eventRouter);
-router.use('/alerts', alersRouter);
+router.use('/alerts', alertRouter);
 router.use('/updates', updateRouter);
+router.use('/schedules', scheduleRouter);
 
 // API root endpoint
 router.get('/', (_req, res) => {
@@ -27,6 +29,7 @@ router.get('/', (_req, res) => {
             events: '/api/events',
             alerts: '/api/alers',
             updates: '/api/updates',
+            schedule: '/api/schedules',
         },
     });
 });

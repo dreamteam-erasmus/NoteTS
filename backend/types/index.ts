@@ -72,6 +72,51 @@ export class Alert {
     }
 }
 
+export class Class {
+    studentsIds: string[]
+    scheduleId: string
+    id: string
+
+    constructor(studentsIds: string[]) {
+        this.id = randomUUID()
+        this.studentsIds = studentsIds
+        this.scheduleId = ""
+    }
+
+    setSchedule(scheduleId: string) {
+        this.scheduleId = scheduleId
+    }
+}
+
+export class Schedule {
+    periods: SchedulePeriods[][]
+    id: string
+    classId: string
+
+    constructor(periods: SchedulePeriods[][]) {
+        this.periods = periods
+        this.id = randomUUID()
+        this.classId = ""
+    }
+
+    setClass(classId: string) {
+        this.classId = classId
+    }
+}
+
+export class SchedulePeriods {
+    id: string
+    name: string
+    teacher: string
+    room: string
+
+    constructor(name: string, teacher: string, room: string) {
+        this.id = randomUUID()
+        this.name = name
+        this.teacher = teacher
+        this.room = room
+    }
+}
 
 export interface CreateUserDto {
     email: string;

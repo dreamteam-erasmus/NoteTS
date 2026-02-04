@@ -7,6 +7,9 @@ import apiRouter from './routes/index.js';
 import { loadUserDB } from './dataManager/userDB.js';
 import { loadAnnouncementsDB } from './dataManager/announcementsDB.js';
 import { loadEventsDB } from './dataManager/eventsDB.js';
+import { loadAlertDB as loadAlertsDB } from './dataManager/alertsDB.js';
+import { loadUpdateDB as loadUpdatesDB } from './dataManager/updatesDB.js';
+import { loadScheduleDB } from './dataManager/schedulesDB.js';
 
 // Initialize Express app
 const app: Application = express();
@@ -62,6 +65,9 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
 await loadUserDB()
 await loadAnnouncementsDB()
 await loadEventsDB()
+await loadAlertsDB()
+await loadUpdatesDB()
+await loadScheduleDB()
 
 // ===================
 // Start Server
