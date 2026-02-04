@@ -26,6 +26,9 @@ app.use(cors());
 // Parse JSON bodies
 app.use(express.json());
 
+// Parse cookies
+app.use(cookieParser());
+
 // Parse URL-encoded bodies
 app.use(express.urlencoded({ extended: true }));
 
@@ -58,8 +61,8 @@ app.get('/dash', (_req: Request, res: Response) => {
     }
 });
 app.get('/admin', (_req: Request, res: Response) => {
-    if (authCheckAdmin(_req,res)) {
-    res.sendFile("admin.html", { root: "./src" })
+    if (authCheckAdmin(_req, res)) {
+        res.sendFile("admin.html", { root: "./src" })
     }
 });
 
@@ -94,8 +97,6 @@ await loadScheduleDB()
 // ===================
 // Start Server
 // ===================
-
-app.use(cookieParser())
 
 app.listen(PORT, () => {
     console.log(`🚀 Server running on http://localhost:${PORT}`);
