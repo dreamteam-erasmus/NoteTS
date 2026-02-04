@@ -1,0 +1,66 @@
+import express, { Application, Request, Response, NextFunction } from 'express';
+import cors from 'cors';
+
+// Import routes
+import apiRouter from './routes/index.js';
+
+// Initialize Express app
+const app: Application = express();
+const PORT = process.env.PORT || 3000;
+
+// ===================
+// Middleware
+// ===================
+
+// Enable CORS
+app.use(cors());
+
+// Parse JSON bodies
+app.use(express.json());
+
+// Parse URL-encoded bodies
+app.use(express.urlencoded({ extended: true }));
+
+// Request logging middleware
+app.use((req: Request, _res: Response, next: NextFunction) => {
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
+    next();
+});
+
+// ===================
+// Routes
+// ===================
+
+// Health check endpoint
+app.get('/health', (_req: Request, res: Response) => {
+    res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
+// API routes
+app.use('/api', apiRouter);
+
+// ===================
+// Error Handling
+// ===================
+
+// 404 handler
+app.use((_req: Request, res: Response) => {
+    res.status(404).json({ error: 'Not Found' });
+});
+
+// Global error handler
+app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
+    console.error('Error:', err.message);
+    res.status(500).json({ error: 'Internal Server Error' });
+});
+
+// ===================
+// Start Server
+// ===================
+
+app.listen(PORT, () => {
+    console.log(`🚀 Server running on http://localhost:${PORT}`);
+    console.log(`📡 API available at http://localhost:${PORT}/api`);
+});
+
+export default app;
