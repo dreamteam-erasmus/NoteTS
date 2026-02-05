@@ -22,18 +22,18 @@
         --secondary-foreground: oklch(0.8 0 0);
         --muted: oklch(0.22 0.005 250);
         --muted-foreground: oklch(0.55 0 0);
-        --accent: oklch(0.68 0.16 145);
+        --accent: oklch(70% 0.11 244);
         --accent-foreground: oklch(0.12 0.005 250);
         --destructive: oklch(0.62 0.2 25);
         --destructive-foreground: oklch(0.93 0 0);
         --border: oklch(0.24 0.005 250);
         --input: oklch(0.18 0.005 250);
-        --ring: oklch(0.68 0.16 145);
-        --chart-1: oklch(0.68 0.16 145);
-        --chart-2: oklch(0.72 0.14 45);
-        --chart-3: oklch(0.6 0.14 250);
-        --chart-4: oklch(0.65 0.12 320);
-        --chart-5: oklch(0.7 0.1 80);
+        --ring: oklch(70% 0.11 244);
+        --chart-1: oklch(70% 0.11 244);
+        --chart-2: oklch(0.78 0.14 75);
+        --chart-3: oklch(42% 0.06 250);
+        --chart-4: oklch(83% 0.08 242);
+        --chart-5: oklch(0.72 0.14 145);
         --radius: 0.625rem;
         --sidebar: oklch(0.14 0.005 250);
         --sidebar-foreground: oklch(0.93 0 0);
@@ -42,10 +42,10 @@
         --sidebar-accent: oklch(0.2 0.005 250);
         --sidebar-accent-foreground: oklch(0.93 0 0);
         --sidebar-border: oklch(0.24 0.005 250);
-        --sidebar-ring: oklch(0.68 0.16 145);
-        --success: oklch(0.68 0.16 145);
+        --sidebar-ring: oklch(70% 0.11 244);
+        --success: oklch(0.72 0.14 145);
         --warning: oklch(0.78 0.14 75);
-        --info: oklch(0.6 0.14 250);
+        --info: oklch(70% 0.11 244);
         }
 
         @theme inline {
@@ -122,26 +122,24 @@
                     </div>
                     <div>
                         <p class="font-medium text-foreground text-sm" id="user_name_display">Loading...</p>
-                        <p class="text-xs text-muted-foreground" id="user_role_display">Student</p>
+                        <p class="text-xs text-muted-foreground" id="user_role_display">Loading...</p>
                     </div>
                 </div>
             </div>
 
             <nav class="flex-1 p-2 space-y-1">
-                <a href="/" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary/50">
-                    <i data-lucide="home" class="h-4 w-4"></i>
-                    Domů
-                </a>
                 <a href="/dash.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-secondary text-foreground">
-                    <i data-lucide="user" class="h-4 w-4"></i>
-                    Přehled
+                    <i data-lucide="layout-dashboard" class="h-4 w-4"></i>
+                    Overview
                 </a>
-                <a href="/info.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary/50">
-                    <i data-lucide="bell" class="h-4 w-4"></i>
-                    Školní info
+                <a href="#" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary/50">
+                    <i data-lucide="school" class="h-4 w-4"></i>
+                    School Info
                 </a>
-            </nav>
-            
+                <a href="/admin.html" id="admin-nav-link" class="hidden flex items-center gap-2.5 px-3 py-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary/50">
+                    <i data-lucide="shield" class="h-4 w-4"></i>
+                    Admin
+                </a>
             </nav>
         </aside>
 
@@ -166,30 +164,35 @@
                     <h1 class="text-3xl font-bold tracking-tight text-foreground" id="greeting_display">Dashboard</h1>
                 </div>
 
-                <div>
-                    <p class="text-muted-foreground text-sm font-medium mb-1" id="date_display">Loading date...</p>
-                    <h1 class="text-3xl font-bold tracking-tight text-foreground" id="greeting_display">Dashboard</h1>
-                </div>
-
                 <div class="grid lg:grid-cols-3 gap-8">
                     <!-- Left Column: Schedule & Info -->
                     <div class="lg:col-span-2 space-y-8">
                         <!-- Current Info Card -->
                         <div class="p-6 rounded-2xl bg-accent/5 border border-accent/20 flex flex-col md:flex-row md:items-center justify-between gap-6 overflow-hidden relative">
-                            <div class="absolute -right-8 -bottom-8 opacity-[0.03] rotate-12">
-                                <i data-lucide="clock-8" class="h-48 w-48"></i>
-                            </div>
                             <div class="space-y-2 relative z-10">
-                                <span class="px-2 py-0.5 rounded-full bg-accent/15 text-accent text-[10px] font-bold uppercase tracking-widest">Právě teď</span>
+                                <span class="px-2 py-0.5 rounded-full bg-accent/15 text-accent text-[10px] font-bold uppercase tracking-widest">Right Now</span>
                                 <h3 class="text-xl font-bold" id="current_subject">No current classes</h3>
                                 <p class="text-sm text-muted-foreground flex items-center gap-3">
                                     <span class="flex items-center gap-1.5"><i data-lucide="user" class="h-4 w-4"></i> <span id="current_teacher">-</span></span>
                                     <span class="flex items-center gap-1.5"><i data-lucide="map-pin" class="h-4 w-4"></i> <span id="current_room">-</span></span>
                                 </p>
                             </div>
-                            <div class="text-right relative z-10">
-                                <p class="text-3xl font-mono font-bold tracking-tighter" id="clock_display">00:00:00</p>
-                                <p class="text-xs text-muted-foreground" id="next_class_timer">System synced</p>
+                            <div class="flex items-center justify-between sm:justify-end gap-4 sm:gap-8 relative z-10 border-t sm:border-t-0 border-accent/10 pt-4 sm:pt-0">
+                                <!-- Quick Stats -->
+                                <div class="flex gap-4 sm:gap-6 border-r border-accent/20 pr-4 sm:pr-8">
+                                    <div class="text-right">
+                                        <p class="text-[9px] font-bold text-accent/60 uppercase tracking-widest">Success</p>
+                                        <p class="text-base sm:text-lg font-bold">96%</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-[9px] font-bold text-accent/60 uppercase tracking-widest">Absence</p>
+                                        <p class="text-base sm:text-lg font-bold">12h</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-2xl sm:text-3xl font-mono font-bold tracking-tighter" id="clock_display">00:00:00</p>
+                                    <p class="text-[10px] text-muted-foreground" id="next_class_timer">System synced</p>
+                                </div>
                             </div>
                         </div>
 
@@ -197,11 +200,11 @@
                         <div class="space-y-4">
                             <div class="flex items-center gap-2">
                                 <i data-lucide="calendar" class="h-5 w-5 text-muted-foreground"></i>
-                                <h2 class="text-xl font-bold text-foreground">Dnešní rozvrh</h2>
+                                <h2 class="text-xl font-bold text-foreground">Today's Schedule</h2>
                             </div>
                             <div class="rounded-2xl border border-border bg-card overflow-hidden" id="schedule_list">
                                 <div class="p-12 text-center text-muted-foreground italic">
-                                    <p class="text-sm">Načítání rozvrhu...</p>
+                                    <p class="text-sm">Loading schedule...</p>
                                 </div>
                             </div>
                         </div>
@@ -214,7 +217,7 @@
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center gap-2">
                                     <i data-lucide="megaphone" class="h-5 w-5 text-muted-foreground"></i>
-                                    <h2 class="text-xl font-bold">Oznámení</h2>
+                                    <h2 class="text-xl font-bold">Announcements</h2>
                                 </div>
                                 <span class="text-[10px] font-bold text-muted-foreground px-2 py-0.5 rounded-full bg-secondary" id="ann_count">0</span>
                             </div>
@@ -223,32 +226,28 @@
                             </div>
                         </div>
 
-                        <!-- Updates Section -->
-                        <div class="space-y-4">
-                            <div class="flex items-center gap-2">
-                                <i data-lucide="history" class="h-5 w-5 text-muted-foreground"></i>
-                                <h2 class="text-xl font-bold">Změny & Updaty</h2>
+                        <!-- Events Section -->
+                        <div class="space-y-4" id="events_section">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <i data-lucide="calendar-days" class="h-5 w-5 text-muted-foreground"></i>
+                                    <h2 class="text-xl font-bold">Upcoming Events</h2>
+                                </div>
+                                <span class="text-[10px] font-bold text-muted-foreground px-2 py-0.5 rounded-full bg-secondary" id="event_count">0</span>
                             </div>
-                            <div class="space-y-3" id="updates_container">
-                                <!-- Updates will be injected here -->
+                            <div class="space-y-3" id="events_container">
+                                <!-- Events will be injected here -->
                             </div>
                         </div>
-                        
-                        <!-- Mini Stats -->
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="p-4 rounded-2xl bg-card border border-border space-y-1">
-                                <div class="flex items-center gap-1.5 text-muted-foreground">
-                                    <i data-lucide="trending-up" class="h-3.5 w-3.5"></i>
-                                    <span class="text-[10px] font-bold uppercase tracking-wider">Úspěšnost</span>
-                                </div>
-                                <p class="text-lg font-bold">96%</p>
+
+                        <!-- Updates Section -->
+                        <div class="space-y-4" id="updates_section">
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="history" class="h-5 w-5 text-muted-foreground"></i>
+                                <h2 class="text-xl font-bold">System Updates</h2>
                             </div>
-                            <div class="p-4 rounded-2xl bg-card border border-border space-y-1">
-                                <div class="flex items-center gap-1.5 text-muted-foreground">
-                                    <i data-lucide="clock" class="h-3.5 w-3.5"></i>
-                                    <span class="text-[10px] font-bold uppercase tracking-wider">Absence</span>
-                                </div>
-                                <p class="text-lg font-bold">12 hod</p>
+                            <div class="space-y-2.5" id="updates_container">
+                                <!-- Updates will be injected here -->
                             </div>
                         </div>
                     </div>
@@ -295,14 +294,15 @@
 
         function updateClock() {
             const now = new Date();
-            if (document.getElementById('clock_display')) document.getElementById('clock_display').textContent = now.toLocaleTimeString('cs-CZ');
-            if (document.getElementById('date_display')) document.getElementById('date_display').textContent = now.toLocaleDateString('cs-CZ', { weekday: 'long', day: 'numeric', month: 'long' });
+            if (document.getElementById('clock_display')) document.getElementById('clock_display').textContent = now.toLocaleTimeString('en-US');
+            if (document.getElementById('date_display')) document.getElementById('date_display').textContent = now.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long' });
         }
 
         async function fetchEverything() {
             await Promise.all([
                 fetchAnnouncements(),
                 fetchSchedules(),
+                fetchEvents(),
                 fetchAlerts(),
                 fetchUpdates()
             ]);
@@ -318,7 +318,20 @@
                 currentUser = res.data.find(u => u.id === userId);
                 if (currentUser) {
                     document.getElementById('user_name_display').textContent = currentUser.name;
-                    document.getElementById('greeting_display').textContent = `Dobré ${new Date().getHours() < 12 ? 'ráno' : 'odpoledne'}, ${currentUser.name.split(' ')[0]}`;
+                    document.getElementById('user_role_display').textContent = currentUser.isAdmin ? 'Admin' : 'Student';
+                    const hours = new Date().getHours();
+                    let greeting = "Good evening";
+                    if (hours < 5) greeting = "Good night";
+                    else if (hours < 12) greeting = "Good morning";
+                    else if (hours < 18) greeting = "Good afternoon";
+                    else if (hours >= 21) greeting = "Good night";
+                    
+                    document.getElementById('greeting_display').textContent = `${greeting}, ${currentUser.name.split(' ')[0]}`;
+                    
+                    // Show admin link if user is admin
+                    if (currentUser.isAdmin) {
+                        document.getElementById('admin-nav-link')?.classList.remove('hidden');
+                    }
                 }
             }
         }
@@ -329,7 +342,7 @@
             if (res.data) {
                 document.getElementById('ann_count').textContent = res.data.length;
                 container.innerHTML = res.data.length ? res.data.slice().reverse().map(ann => `
-                    <div class="p-4 rounded-xl border border-border bg-card group hover:scale-[1.02] transition-all">
+                    <div class="p-4 rounded-xl border border-border bg-card group">
                         <div class="flex items-start gap-3">
                             <div class="h-2 w-2 rounded-full mt-2 shrink-0 ${ann.type === 'urgent' ? 'bg-destructive shadow-[0_0_8px_rgba(255,0,0,0.5)]' : ann.type === 'sports' ? 'bg-chart-2' : 'bg-accent'}"></div>
                             <div class="space-y-1">
@@ -338,29 +351,84 @@
                             </div>
                         </div>
                     </div>
-                `).join('') : '<div class="p-6 text-center text-xs text-muted-foreground border border-dashed border-border rounded-xl">Žádná oznámení</div>';
+                `).join('') : '<div class="p-6 text-center text-xs text-muted-foreground border border-dashed border-border rounded-xl">No announcements</div>';
             }
         }
 
         async function fetchSchedules() {
-            const res = await apiFetch('/schedules');
+            // Get logged in user's classId
+            const userId = getCookie('userId');
+            const userRes = await apiFetch('/users');
+            const user = userRes.data?.find(u => u.id === userId);
+            const classId = user?.classId || "";
+
+            const res = await apiFetch(`/schedules?classId=${classId}`);
             const container = document.getElementById('schedule_list');
             if (res.data && res.data[0]) {
                 const day = Math.min(new Date().getDay() - 1, 4);
-                const periods = res.data[0].periods[day === -1 ? 0 : day] || [];
-                container.innerHTML = periods.map((p, i) => `
-                    <div class="flex items-center gap-4 p-4 hover:bg-accent/5 border-b border-border last:border-0 group">
-                        <div class="h-9 w-9 rounded-xl bg-secondary text-secondary-foreground text-xs font-bold flex items-center justify-center shrink-0 group-hover:bg-accent group-hover:text-accent-foreground transition-colors">
+                if (day === -1) { // Weekend
+                    container.innerHTML = '<div class="p-12 text-center text-muted-foreground italic"><p class="text-sm">Weekend - no classes today</p></div>';
+                    updateCurrentClass(null);
+                    return;
+                }
+
+                // Map row-first (periods) to day-column
+                const dayPeriods = res.data[0].periods.map(row => row[day]).filter(p => p && p.name);
+                
+                if (dayPeriods.length === 0) {
+                    container.innerHTML = '<div class="p-12 text-center text-muted-foreground italic"><p class="text-sm">No schedule for today</p></div>';
+                    updateCurrentClass(null);
+                    return;
+                }
+
+                container.innerHTML = dayPeriods.map((p, i) => `
+                    <div class="flex items-center gap-4 p-4 border-b border-border last:border-0 group">
+                        <div class="h-9 w-9 rounded-xl bg-secondary text-secondary-foreground text-xs font-bold flex items-center justify-center shrink-0">
                             ${i + 1}
                         </div>
                         <div class="flex-1 min-w-0">
                             <p class="text-sm font-bold text-foreground">${p.name}</p>
-                            <p class="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">${p.teacher} · ${p.room}</p>
+                            <p class="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">${p.teacher || 'Unknown'} · ${p.room || '-'}</p>
                         </div>
-                        <i data-lucide="chevron-right" class="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                        <i data-lucide="chevron-right" class="h-4 w-4 text-muted-foreground opacity-0"></i>
                     </div>
                 `).join('');
+                
+                // Update "Current Class" card
+                updateCurrentClass(dayPeriods);
                 lucide.createIcons();
+            }
+        }
+
+        function updateCurrentClass(periods) {
+            const now = new Date();
+            const hour = now.getHours();
+            const min = now.getMinutes();
+            const timeVal = hour * 60 + min;
+
+            // Simple school time slots (example)
+            const slots = [
+                { s: 480, e: 525 }, // 8:00 - 8:45
+                { s: 535, e: 580 }, // 8:55 - 9:40
+                { s: 600, e: 645 }, // 10:00 - 10:45
+                { s: 655, e: 700 }, // 10:55 - 11:40
+                { s: 710, e: 755 }, // 11:50 - 12:35
+                { s: 765, e: 810 }, // 12:45 - 13:30
+                { s: 820, e: 865 }, // 13:40 - 14:25
+                { s: 875, e: 920 }  // 14:35 - 15:20
+            ];
+
+            const currentIdx = slots.findIndex(s => timeVal >= s.s && timeVal <= s.e);
+            
+            if (periods && currentIdx !== -1 && periods[currentIdx]) {
+                const current = periods[currentIdx];
+                document.getElementById('current_subject').textContent = current.name || 'Free Period';
+                document.getElementById('current_teacher').textContent = current.teacher || '-';
+                document.getElementById('current_room').textContent = current.room || '-';
+            } else {
+                document.getElementById('current_subject').textContent = 'No ongoing classes';
+                document.getElementById('current_teacher').textContent = '-';
+                document.getElementById('current_room').textContent = '-';
             }
         }
 
@@ -370,7 +438,7 @@
             const msg = document.getElementById('alert_message');
             if (res.data && res.data.length > 0) {
                 const latest = res.data[res.data.length - 1];
-                msg.textContent = latest.message;
+                msg.textContent = latest.message || 'System Notification';
                 banner.classList.remove('hidden');
                 lucide.createIcons();
             } else {
@@ -378,16 +446,57 @@
             }
         }
 
+        async function fetchEvents() {
+            const res = await apiFetch('/events');
+            const container = document.getElementById('events_container');
+            const section = document.getElementById('events_section');
+            if (res.data) {
+                document.getElementById('event_count').textContent = res.data.length;
+                if (res.data.length === 0) {
+                    section.classList.add('hidden');
+                    container.innerHTML = '<div class="p-6 text-center text-xs text-muted-foreground border border-dashed border-border rounded-xl">No upcoming events</div>';
+                    return;
+                }
+                section.classList.remove('hidden');
+                container.innerHTML = res.data.map(ev => `
+                    <div class="flex items-center justify-between p-3.5 rounded-xl border border-border bg-card/50 hover:bg-card group cursor-default">
+                        <div class="flex items-center gap-4">
+                            <div class="flex items-center gap-3">
+                                <div class="h-9 w-9 rounded-xl bg-secondary text-secondary-foreground text-xs font-bold flex items-center justify-center shrink-0">
+                                    ${new Date(ev.time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}).split(':')[0]}
+                                </div>
+                                <div class="space-y-0.5">
+                                    <h4 class="text-sm font-bold text-foreground line-clamp-1">${ev.title}</h4>
+                                    <div class="flex items-center gap-2 text-[10px] text-muted-foreground">
+                                        <span class="flex items-center gap-1"><i data-lucide="clock" class="h-3 w-3"></i> ${new Date(ev.time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                                        <span class="flex items-center gap-1 text-accent/80"><i data-lucide="map-pin" class="h-3 w-3"></i> ${ev.location || 'N/A'}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <i data-lucide="chevron-right" class="h-4 w-4 text-muted-foreground opacity-0"></i>
+                    </div>
+                `).join('');
+                lucide.createIcons();
+            }
+        }
+
         async function fetchUpdates() {
             const res = await apiFetch('/updates');
             const container = document.getElementById('updates_container');
+            const section = document.getElementById('updates_section');
             if (res.data) {
-                container.innerHTML = res.data.length ? res.data.slice().reverse().map(up => `
-                    <div class="flex items-start gap-3 p-1">
-                        <i data-lucide="check-circle-2" class="h-4 w-4 text-accent shrink-0"></i>
-                        <p class="text-xs text-muted-foreground leading-snug">${up.message}</p>
+                if (res.data.length === 0) {
+                    section.classList.add('hidden');
+                    return;
+                }
+                section.classList.remove('hidden');
+                container.innerHTML = res.data.slice().reverse().map(up => `
+                    <div class="p-3 rounded-lg bg-success/15 border border-success/30 flex items-start gap-3 hover:bg-success/20">
+                        <i data-lucide="check-circle-2" class="h-3.5 w-3.5 text-success mt-0.5 shrink-0"></i>
+                        <p class="text-[11px] text-foreground/90 leading-normal font-medium">${up.message || 'Update without description'}</p>
                     </div>
-                `).join('') : '<p class="text-center text-xs text-muted-foreground py-4">Žádné nové updaty</p>';
+                `).join('');
                 lucide.createIcons();
             }
         }
