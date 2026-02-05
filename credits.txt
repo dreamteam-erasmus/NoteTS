@@ -1,0 +1,1 @@
+special thanks to chatgpt for cleaning up code so its readable and lucas doesn't suffer with reading spaghetti sungi code
