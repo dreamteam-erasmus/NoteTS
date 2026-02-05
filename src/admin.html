@@ -3,95 +3,909 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="NoteTS - A modern note-taking application">
-    <title>NoteTS</title>
-    <link rel="stylesheet" href="styles/components/main.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <title>Admin Dashboard | NoteTS</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style type="text/tailwindcss">
+        @custom-variant dark (&:is(.dark *));
+        :root {
+            --background: oklch(0.12 0.005 250);
+            --foreground: oklch(0.93 0 0);
+            --card: oklch(0.16 0.005 250);
+            --card-foreground: oklch(0.93 0 0);
+            --popover: oklch(0.16 0.005 250);
+            --popover-foreground: oklch(0.93 0 0);
+            --primary: oklch(0.93 0 0);
+            --primary-foreground: oklch(0.12 0.005 250);
+            --secondary: oklch(0.2 0.005 250);
+            --secondary-foreground: oklch(0.8 0 0);
+            --muted: oklch(0.22 0.005 250);
+            --muted-foreground: oklch(0.55 0 0);
+            --accent: oklch(70% 0.11 244);
+            --accent-foreground: oklch(0.12 0.005 250);
+            --destructive: oklch(0.62 0.2 25);
+            --destructive-foreground: oklch(0.93 0 0);
+            --border: oklch(0.24 0.005 250);
+            --input: oklch(0.18 0.005 250);
+            --ring: oklch(70% 0.11 244);
+            --chart-1: oklch(70% 0.11 244);
+            --chart-2: oklch(0.78 0.14 75);
+            --chart-3: oklch(42% 0.06 250);
+            --chart-4: oklch(83% 0.08 242);
+            --chart-5: oklch(0.72 0.14 145);
+            --radius: 0.625rem;
+            --sidebar: oklch(0.14 0.005 250);
+            --sidebar-foreground: oklch(0.93 0 0);
+            --sidebar-primary: oklch(0.93 0 0);
+            --sidebar-primary-foreground: oklch(0.12 0.005 250);
+            --sidebar-accent: oklch(0.2 0.005 250);
+            --sidebar-accent-foreground: oklch(0.93 0 0);
+            --sidebar-border: oklch(0.24 0.005 250);
+            --sidebar-ring: oklch(70% 0.11 244);
+            --success: oklch(0.72 0.14 145);
+            --warning: oklch(0.78 0.14 75);
+            --info: oklch(70% 0.11 244);
+        }
+
+        @theme inline {
+            --color-success: var(--success);
+            --color-warning: var(--warning);
+            --color-info: var(--info);
+            --color-background: var(--background);
+            --color-foreground: var(--foreground);
+            --color-card: var(--card);
+            --color-card-foreground: var(--card-foreground);
+            --color-popover: var(--popover);
+            --color-popover-foreground: var(--popover-foreground);
+            --color-primary: var(--primary);
+            --color-primary-foreground: var(--primary-foreground);
+            --color-secondary: var(--secondary);
+            --color-secondary-foreground: var(--secondary-foreground);
+            --color-muted: var(--muted);
+            --color-muted-foreground: var(--muted-foreground);
+            --color-accent: var(--accent);
+            --color-accent-foreground: var(--accent-foreground);
+            --color-destructive: var(--destructive);
+            --color-destructive-foreground: var(--destructive-foreground);
+            --color-border: var(--border);
+            --color-input: var(--input);
+            --color-ring: var(--ring);
+            --color-chart-1: var(--chart-1);
+            --color-chart-2: var(--chart-2);
+            --color-chart-3: var(--chart-3);
+            --color-chart-4: var(--chart-4);
+            --color-chart-5: var(--chart-5);
+            --radius-sm: calc(var(--radius) - 4px);
+            --radius-md: calc(var(--radius) - 2px);
+            --radius-lg: var(--radius);
+            --radius-xl: calc(var(--radius) + 4px);
+            --color-sidebar: var(--sidebar);
+            --color-sidebar-foreground: var(--sidebar-foreground);
+            --color-sidebar-primary: var(--sidebar-primary);
+            --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+            --color-sidebar-accent: var(--sidebar-accent);
+            --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+            --color-sidebar-border: var(--sidebar-border);
+            --color-sidebar-ring: var(--sidebar-ring);
+        }
+    </style>
 </head>
-<body>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-12 text-center text-light bg-secondary">
-                ● Admin ●
+<body class="bg-background text-foreground selection:bg-accent/30 overflow-x-hidden">
+    <div class="min-h-screen flex">
+        <!-- Sidebar -->
+        <aside class="w-56 border-r border-border bg-card hidden lg:flex flex-col h-screen sticky top-0">
+            <div class="p-4 border-b border-border">
+                <a href="/" class="flex items-center gap-2.5">
+                    <div class="h-8 w-8 rounded-lg flex items-center justify-center">
+                        <img src="assets/images/logo-dark.png" class="h-6 w-6">
+                    </div>
+                    <span class="font-semibold text-foreground text-sm tracking-tight">NoteTS</span>
+                </a>
             </div>
-        </div>
-        <div class="row" id="main" >
-            <div class="col-2 bg-dark vh-100" id="left-admin-panel">
-                <div class="mb-3 all-main-info">
-                    <h2 id="adminUserName">userName</h2>
+
+            <nav class="flex-1 p-2 space-y-1" id="main-nav">
+                <button onclick="setActiveNav('Announcements')" class="nav-item w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-secondary/50" data-nav="Announcements">
+                    <i data-lucide="megaphone" class="h-4 w-4"></i>
+                    Announcements
+                </button>
+                <button onclick="setActiveNav('Events')" class="nav-item w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-secondary/50" data-nav="Events">
+                    <i data-lucide="calendar" class="h-4 w-4"></i>
+                    Events
+                </button>
+                <button onclick="setActiveNav('Schedule')" class="nav-item w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-secondary/50" data-nav="Schedule">
+                    <i data-lucide="clock" class="h-4 w-4"></i>
+                    Schedule
+                </button>
+                <button onclick="setActiveNav('Displays')" class="nav-item w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-secondary/50" data-nav="Displays">
+                    <i data-lucide="monitor" class="h-4 w-4"></i>
+                    Displays
+                </button>
+                <button onclick="setActiveNav('Alerts')" class="nav-item w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-secondary/50" data-nav="Alerts">
+                    <i data-lucide="alert-triangle" class="h-4 w-4"></i>
+                    Alerts
+                </button>
+                <button onclick="setActiveNav('Updates')" class="nav-item w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-secondary/50" data-nav="Updates">
+                    <i data-lucide="history" class="h-4 w-4"></i>
+                    Updates
+                </button>
+                <button onclick="setActiveNav('Users')" class="nav-item w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm bg-secondary text-foreground" data-nav="Users">
+                    <i data-lucide="users" class="h-4 w-4"></i>
+                    Users
+                </button>
+            </nav>
+
+            <div class="p-3 border-t border-border">
+                <a href="/dash.html" target="_blank" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-secondary/50">
+                    <i data-lucide="external-link" class="h-4 w-4"></i>
+                    Open Dashboard
+                </a>
+                <a href="/display.html" target="_blank" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-secondary/50">
+                    <i data-lucide="external-link" class="h-4 w-4"></i>
+                    Open Display
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col min-w-0">
+            <!-- Top Bar -->
+            <header class="h-14 border-b border-border px-6 flex items-center justify-between shrink-0 bg-card/50 backdrop-blur-sm sticky top-0 z-50">
+                <div class="flex items-center gap-3">
+                    <button id="mobile-menu-toggle" class="lg:hidden p-2 hover:bg-secondary rounded-lg">
+                        <i data-lucide="menu" class="h-5 w-5"></i>
+                    </button>
+                    <h1 class="font-medium text-foreground tracking-tight" id="active-nav-title">Users</h1>
                 </div>
-                <hr class="text-light adminHR">
-                <a href="admin.html" class="text-decoration-none">
-                    <div class="box rounded mb-3 all-main-info">
-                        <h5>Home</h5>
+                <div class="flex items-center gap-3">
+                    <p class="text-xs text-muted-foreground font-medium hidden sm:block" id="admin_name">Admin</p>
+                    <div class="h-7 w-7 rounded-full bg-secondary flex items-center justify-center border border-border">
+                        <span class="text-[10px] font-bold text-foreground" id="admin_initials">A</span>
                     </div>
-                </a>
-                <a href="admin.html" class="text-decoration-none">
-                    <div class="box rounded mb-3 all-main-info">
-                        <h5>Profile</h5>
-                    </div>
-                </a>
-                <a href="admin.html" class="text-decoration-none">
-                    <div class="box rounded mb-3 all-main-info">
-                        <h5>Info</h5>
-                    </div>
-                </a>
-            </div>
+                </div>
+            </header>
 
-            <div class="col-10">
-                <div class="all-main-info">
-                    <div class="row">
-                        <div class="col-3">
-                            <div class="box rounded mb-3 box-100 all-main-info">
-                                <h3 class="all-small-info">Total Users</h3>
-                                <hr>
-                                <h1 class="numbersFix">0</h1>
-                            </div>
+            <!-- Content Area -->
+            <div class="flex-1 overflow-auto">
+                <div class="p-6 max-w-6xl mx-auto space-y-8">
+                    <!-- Stats Row -->
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="p-4 rounded-xl bg-card border border-border space-y-1">
+                            <p class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Announcements</p>
+                            <p class="text-2xl font-bold text-foreground" id="stat-ann-count">0</p>
                         </div>
-                        <div class="col-3">
-                            <div class="box rounded mb-3 box-100 all-main-info">
-                                <h3 class="all-small-info">placeholder</h3>
-                                <hr>
-                                <h1 class="numbersFix">0</h1>
-                            </div>
+                        <div class="p-4 rounded-xl bg-card border border-border space-y-1">
+                            <p class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Events</p>
+                            <p class="text-2xl font-bold text-foreground" id="stat-event-count">0</p>
                         </div>
-                        <div class="col-3">
-                            <div class="box rounded mb-3 box-100 all-main-info">
-                                <h3 class="all-small-info">placeholder</h3>
-                                <hr>
-                                <h1 class="numbersFix">0</h1>
-                            </div>
+                        <div class="p-4 rounded-xl bg-card border border-border space-y-1">
+                            <p class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Users</p>
+                            <p class="text-2xl font-bold text-foreground" id="stat-user-count">0</p>
                         </div>
-                        <div class="col-3">
-                            <div class="box rounded mb-3 box-100 all-main-info">
-                                <h3 class="all-small-info">placeholder</h3>
-                                <hr>
-                                <h1 class="numbersFix">0</h1>
-                            </div>
-                        </div>
-                    </div>
-                    <hr class="adminHR">
-                    <div class="row" id="adminMain">
-                        <div class="col-8">
-                            <div class="box rounded mb-3 box-25 all-main-info" id="">
-                                <h2 class="all-small-info">placeholder</h2>
-                                <hr>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="box rounded mb-3 box-100 all-main-info">
-                                <h2 class="all-small-info">placeholder</h2>
-                            </div>
+                        <div class="p-4 rounded-xl bg-card border border-border space-y-1">
+                            <p class="text-[10px] font-bold text-destructive uppercase tracking-wider">Alerts</p>
+                            <p class="text-2xl font-bold text-destructive" id="stat-alert-count">0</p>
                         </div>
                     </div>
 
+                    <!-- Main Section -->
+                    <div id="section-Announcements" class="nav-section hidden space-y-6">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                            <div class="flex items-center gap-3">
+                                <div class="relative flex-1 sm:flex-initial">
+                                    <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"></i>
+                                    <input type="text" id="ann-search" placeholder="Search..." class="pl-9 w-full sm:w-48 h-9 bg-card border border-border rounded-lg text-sm focus:ring-2 focus:ring-accent/50 outline-none">
+                                </div>
+                            </div>
+                            <button onclick="openModal('ann')" class="flex items-center justify-center gap-2 px-4 h-9 bg-accent text-accent-foreground rounded-lg text-sm font-bold hover:opacity-90">
+                                <i data-lucide="plus" class="h-4 w-4"></i> New Announcement
+                            </button>
+                        </div>
+
+                        <div class="space-y-3" id="announcements-list">
+                            <!-- Injected by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Events Section -->
+                    <div id="section-Events" class="nav-section hidden space-y-6">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                            <h2 class="text-lg font-bold">Manage School Events</h2>
+                            <button onclick="openModal('event')" class="flex items-center justify-center gap-2 px-4 h-9 bg-accent text-accent-foreground rounded-lg text-sm font-bold hover:opacity-90 transition-opacity">
+                                <i data-lucide="plus" class="h-4 w-4"></i> New Event
+                            </button>
+                        </div>
+                        <div class="space-y-3" id="events-list">
+                            <!-- Injected by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Schedule Section -->
+                    <div id="section-Schedule" class="nav-section hidden space-y-6">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                            <div>
+                                <h2 class="text-lg font-bold">School Schedule Editor</h2>
+                                <p class="text-xs text-muted-foreground">Manage the 5-day school periods grid.</p>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="flex items-center gap-2 bg-secondary/50 border border-border px-3 h-9 rounded-lg">
+                                    <label class="text-[10px] font-bold text-muted-foreground uppercase">Class:</label>
+                                    <input type="text" id="sched-class-id" placeholder="e.g. 9.A" onchange="fetchSchedule()" class="bg-transparent border-none text-xs font-bold outline-none w-16">
+                                </div>
+                                <button onclick="saveSchedule()" class="flex items-center justify-center gap-2 px-6 h-9 bg-accent text-accent-foreground rounded-lg text-sm font-bold hover:opacity-90 transition-opacity">
+                                    <i data-lucide="save" class="h-4 w-4"></i> Save
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="overflow-x-auto pb-4">
+                            <div class="min-w-[800px] border border-border rounded-2xl bg-card overflow-hidden">
+                                <div class="grid grid-cols-6 border-b border-border bg-secondary/30">
+                                    <div class="p-3 text-[10px] font-bold text-muted-foreground uppercase text-center border-r border-border">Period</div>
+                                    <div class="p-3 text-[10px] font-bold text-muted-foreground uppercase text-center border-r border-border">Mon</div>
+                                    <div class="p-3 text-[10px] font-bold text-muted-foreground uppercase text-center border-r border-border">Tue</div>
+                                    <div class="p-3 text-[10px] font-bold text-muted-foreground uppercase text-center border-r border-border">Wed</div>
+                                    <div class="p-3 text-[10px] font-bold text-muted-foreground uppercase text-center border-r border-border">Thu</div>
+                                    <div class="p-3 text-[10px] font-bold text-muted-foreground uppercase text-center">Fri</div>
+                                </div>
+                                <div id="schedule-grid-container">
+                                    <!-- 8 periods row injected here -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Saved Schedules List -->
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="database" class="h-4 w-4 text-muted-foreground"></i>
+                                <h3 class="text-sm font-bold uppercase tracking-wider text-muted-foreground">Saved Schedules</h3>
+                            </div>
+                            <div id="saved-schedules-list" class="space-y-3">
+                                <!-- Collapsible schedules injected here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Users Section -->
+                    <div id="section-Users" class="nav-section space-y-6">
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-lg font-bold">User Management</h2>
+                            <button onclick="openModal('user')" class="flex items-center justify-center gap-2 px-4 h-9 bg-accent text-accent-foreground rounded-lg text-sm font-bold hover:opacity-90">
+                                <i data-lucide="user-plus" class="h-4 w-4"></i> New User
+                            </button>
+                        </div>
+                        <div class="rounded-2xl border border-border bg-card overflow-hidden">
+                            <table class="w-full text-left text-sm">
+                                <thead class="bg-secondary/30 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+                                    <tr>
+                                        <th class="px-6 py-3">Name</th>
+                                        <th class="px-6 py-3">Email</th>
+                                        <th class="px-6 py-3">Class</th>
+                                        <th class="px-6 py-3">Admin</th>
+                                        <th class="px-6 py-3 text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="users-table-body" class="divide-y divide-border">
+                                    <!-- Injected by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Alerts Section -->
+                    <div id="section-Alerts" class="nav-section hidden space-y-6">
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-lg font-bold text-destructive">System Alerts</h2>
+                            <button onclick="openModal('alert')" class="flex items-center justify-center gap-2 px-4 h-9 bg-destructive text-destructive-foreground rounded-lg text-sm font-bold hover:opacity-90">
+                                <i data-lucide="alert-circle" class="h-4 w-4"></i> New Alert
+                            </button>
+                        </div>
+                        <div class="space-y-3" id="alerts-list">
+                            <!-- Injected by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Updates Section -->
+                    <div id="section-Updates" class="nav-section hidden space-y-6">
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-lg font-bold">System Updates</h2>
+                            <button onclick="openModal('update')" class="flex items-center justify-center gap-2 px-4 h-9 bg-accent text-accent-foreground rounded-lg text-sm font-bold hover:opacity-90">
+                                <i data-lucide="plus" class="h-4 w-4"></i> New Update
+                            </button>
+                        </div>
+                        <div class="space-y-3" id="updates-list">
+                            <!-- Injected by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Placeholder Sections -->
+                    <div id="section-Displays" class="nav-section hidden p-12 text-center text-muted-foreground border border-dashed border-border rounded-2xl italic">
+                        Display settings coming soon...
+                    </div>
                 </div>
             </div>
+        </main>
+    </div>
 
+    <!-- User Modal -->
+    <div id="modal-user" class="hidden fixed inset-0 z-[100] bg-background/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="w-full max-w-md p-6 rounded-2xl bg-card border border-border shadow-2xl space-y-4">
+            <div class="flex items-center justify-between">
+                <h2 class="text-xl font-bold tracking-tight">New User</h2>
+                <button onclick="closeModal('user')" class="p-1 hover:bg-secondary rounded-full"><i data-lucide="x" class="h-5 w-5"></i></button>
+            </div>
+            <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-1.5">
+                        <label class="text-[10px] font-bold text-muted-foreground uppercase">Full Name</label>
+                        <input type="text" id="user-name" placeholder="John Doe" class="w-full px-4 py-2 bg-secondary border border-border rounded-xl focus:ring-2 focus:ring-accent/50 outline-none">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-[10px] font-bold text-muted-foreground uppercase">Class ID</label>
+                        <input type="text" id="user-class" placeholder="9.A" class="w-full px-4 py-2 bg-secondary border border-border rounded-xl focus:ring-2 focus:ring-accent/50 outline-none">
+                    </div>
+                </div>
+                <div class="space-y-1.5">
+                    <label class="text-[10px] font-bold text-muted-foreground uppercase">Email Address</label>
+                    <input type="email" id="user-email" placeholder="john@example.com" class="w-full px-4 py-2 bg-secondary border border-border rounded-xl focus:ring-2 focus:ring-accent/50 outline-none">
+                </div>
+                <div class="space-y-1.5">
+                    <label class="text-[10px] font-bold text-muted-foreground uppercase">Password</label>
+                    <input type="password" id="user-password" class="w-full px-4 py-2 bg-secondary border border-border rounded-xl focus:ring-2 focus:ring-accent/50 outline-none">
+                </div>
+                <div class="flex items-center gap-2 pt-2">
+                    <input type="checkbox" id="user-is-admin" class="h-4 w-4 rounded border-border text-accent focus:ring-accent">
+                    <label for="user-is-admin" class="text-sm font-medium">Administrator account</label>
+                </div>
+                <button onclick="submitUser()" class="w-full py-2.5 bg-accent text-accent-foreground rounded-xl text-sm font-bold">Create Account</button>
+            </div>
         </div>
     </div>
 
+    <!-- Announcement Modal -->
+    <div id="modal-ann" class="hidden fixed inset-0 z-[100] bg-background/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="w-full max-w-md p-6 rounded-2xl bg-card border border-border shadow-2xl space-y-4">
+            <div class="flex items-center justify-between">
+                <h2 class="text-xl font-bold tracking-tight">New Announcement</h2>
+                <button onclick="closeModal('ann')" class="p-1 hover:bg-secondary rounded-full"><i data-lucide="x" class="h-5 w-5"></i></button>
+            </div>
+            <div class="space-y-4">
+                <div class="space-y-1.5">
+                    <label class="text-[10px] font-bold text-muted-foreground uppercase">Title</label>
+                    <input type="text" id="ann-title" class="w-full px-4 py-2 bg-secondary border border-border rounded-xl focus:ring-2 focus:ring-accent/50 outline-none">
+                </div>
+                <div class="space-y-1.5">
+                    <label class="text-[10px] font-bold text-muted-foreground uppercase">Content</label>
+                    <textarea id="ann-content" rows="3" class="w-full px-4 py-2 bg-secondary border border-border rounded-xl focus:ring-2 focus:ring-accent/50 outline-none resize-none"></textarea>
+                </div>
+                <div class="space-y-1.5">
+                    <label class="text-[10px] font-bold text-muted-foreground uppercase">Type</label>
+                    <select id="ann-type" class="w-full px-4 py-2 bg-secondary border border-border rounded-xl focus:ring-2 focus:ring-accent/50 outline-none">
+                        <option value="general">General</option>
+                        <option value="urgent">Urgent</option>
+                        <option value="sports">Sports</option>
+                    </select>
+                </div>
+                <button onclick="submitAnnouncement()" class="w-full py-2.5 bg-accent text-accent-foreground rounded-xl text-sm font-bold">Create</button>
+            </div>
+        </div>
+    </div>
 
-    <script type="module" src="/scripts/main.ts"></script>
+    <!-- Alert Modal -->
+    <div id="modal-alert" class="hidden fixed inset-0 z-[100] bg-background/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="w-full max-w-md p-6 rounded-2xl bg-card border border-border shadow-2xl space-y-4">
+            <div class="flex items-center justify-between">
+                <h2 class="text-xl font-bold tracking-tight text-destructive">New Emergency Alert</h2>
+                <button onclick="closeModal('alert')" class="p-1 hover:bg-secondary rounded-full"><i data-lucide="x" class="h-5 w-5"></i></button>
+            </div>
+            <div class="space-y-4">
+                <div class="space-y-1.5">
+                    <label class="text-[10px] font-bold text-muted-foreground uppercase">Alert Message</label>
+                    <textarea id="alert-message" rows="3" placeholder="e.g. School is closed due to heavy snow." class="w-full px-4 py-2 bg-secondary border border-border rounded-xl focus:ring-2 focus:ring-destructive/50 outline-none resize-none"></textarea>
+                </div>
+                <p class="text-[10px] text-muted-foreground italic">Note: Alerts appear as a prominent red banner at the top of every dashboard.</p>
+                <button onclick="submitAlert()" class="w-full py-2.5 bg-destructive text-destructive-foreground rounded-xl text-sm font-bold">Publish Alert</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update Modal -->
+    <div id="modal-update" class="hidden fixed inset-0 z-[100] bg-background/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="w-full max-w-md p-6 rounded-2xl bg-card border border-border shadow-2xl space-y-4">
+            <div class="flex items-center justify-between">
+                <h2 class="text-xl font-bold tracking-tight">New System Update</h2>
+                <button onclick="closeModal('update')" class="p-1 hover:bg-secondary rounded-full"><i data-lucide="x" class="h-5 w-5"></i></button>
+            </div>
+            <div class="space-y-4">
+                <div class="space-y-1.5">
+                    <label class="text-[10px] font-bold text-muted-foreground uppercase">Update Content</label>
+                    <textarea id="update-message" rows="3" placeholder="e.g. New lunch menu has been uploaded." class="w-full px-4 py-2 bg-secondary border border-border rounded-xl focus:ring-2 focus:ring-accent/50 outline-none resize-none"></textarea>
+                </div>
+                <button onclick="submitUpdate()" class="w-full py-2.5 bg-accent text-accent-foreground rounded-xl text-sm font-bold">Post Update</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Event Modal -->
+    <div id="modal-event" class="hidden fixed inset-0 z-[100] bg-background/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="w-full max-w-md p-6 rounded-2xl bg-card border border-border shadow-2xl space-y-4">
+            <div class="flex items-center justify-between">
+                <h2 class="text-xl font-bold tracking-tight">New Event</h2>
+                <button onclick="closeModal('event')" class="p-1 hover:bg-secondary rounded-full"><i data-lucide="x" class="h-5 w-5"></i></button>
+            </div>
+            <div class="space-y-4">
+                <div class="space-y-1.5">
+                    <label class="text-[10px] font-bold text-muted-foreground uppercase">Event Title</label>
+                    <input type="text" id="event-title" class="w-full px-4 py-2 bg-secondary border border-border rounded-xl focus:ring-2 focus:ring-accent/50 outline-none">
+                </div>
+                <div class="space-y-1.5">
+                    <label class="text-[10px] font-bold text-muted-foreground uppercase">Location</label>
+                    <input type="text" id="event-location" class="w-full px-4 py-2 bg-secondary border border-border rounded-xl focus:ring-2 focus:ring-accent/50 outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-1.5">
+                        <label class="text-[10px] font-bold text-muted-foreground uppercase">Date/Time</label>
+                        <input type="datetime-local" id="event-time" class="w-full px-4 py-2 bg-secondary border border-border rounded-xl focus:ring-2 focus:ring-accent/50 outline-none">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-[10px] font-bold text-muted-foreground uppercase">Category</label>
+                        <select id="event-type" class="w-full px-4 py-2 bg-secondary border border-border rounded-xl focus:ring-2 focus:ring-accent/50 outline-none">
+                            <option value="academic">Academic</option>
+                            <option value="sports">Sports</option>
+                            <option value="social">Social</option>
+                            <option value="arts">Arts</option>
+                        </select>
+                    </div>
+                </div>
+                <button onclick="submitEvent()" class="w-full py-2.5 bg-accent text-accent-foreground rounded-xl text-sm font-bold">Create Event</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '/api';
+
+        // --- Auth Guard ---
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return null;
+        }
+
+        async function checkAdminAuth() {
+            const userId = getCookie('userId');
+            if (!userId) { window.location.href = '/login.html'; return; }
+            const res = await fetch(`${API_BASE}/users`);
+            const data = await res.json();
+            const user = data.data?.find(u => u.id === userId);
+            if (!user || !user.isAdmin) {
+                alert('Access Denied. Admins only.');
+                window.location.href = '/dash.html';
+                return;
+            }
+            document.getElementById('admin_name').textContent = user.name;
+            document.getElementById('admin_initials').textContent = user.name.split(' ').map(n => n[0]).join('');
+        }
+
+        // --- Mobile Nav ---
+        document.getElementById('mobile-menu-toggle')?.addEventListener('click', () => {
+            const aside = document.querySelector('aside');
+            if (aside) {
+                aside.classList.toggle('hidden');
+                aside.classList.toggle('fixed');
+                aside.classList.toggle('inset-0');
+                aside.classList.toggle('z-[100]');
+                aside.classList.toggle('w-full');
+            }
+        });
+
+        // Close mobile menu on nav click
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const aside = document.querySelector('aside');
+                if (window.innerWidth < 1024 && aside && !aside.classList.contains('hidden')) {
+                    aside.classList.add('hidden');
+                    aside.classList.remove('fixed', 'inset-0', 'z-[100]', 'w-full');
+                }
+            });
+        });
+
+        // --- Data Fetching ---
+        async function fetchAll() {
+            await Promise.all([
+                fetchAnnouncements(),
+                fetchEvents(),
+                fetchUsers(),
+                fetchSchedule(),
+                fetchSavedSchedules(),
+                fetchAlerts(),
+                fetchUpdates(),
+                fetchStats()
+            ]);
+        }
+
+        async function fetchStats() {
+            const [ann, ev, usr, alr] = await Promise.all([
+                fetch(`${API_BASE}/announcements`).then(r => r.json()),
+                fetch(`${API_BASE}/events`).then(r => r.json()),
+                fetch(`${API_BASE}/users`).then(r => r.json()),
+                fetch(`${API_BASE}/alerts`).then(r => r.json())
+            ]);
+            document.getElementById('stat-ann-count').textContent = ann.data?.length || 0;
+            document.getElementById('stat-event-count').textContent = ev.data?.length || 0;
+            document.getElementById('stat-user-count').textContent = usr.data?.length || 0;
+            document.getElementById('stat-alert-count').textContent = alr.data?.length || 0;
+        }
+
+        async function fetchAnnouncements() {
+            const res = await fetch(`${API_BASE}/announcements`);
+            const data = await res.json();
+            const container = document.getElementById('announcements-list');
+            container.innerHTML = data.data?.slice().reverse().map(ann => `
+                <div class="group flex items-start gap-4 p-4 rounded-xl bg-card border border-border hover:border-accent/40 cursor-default relative overflow-hidden">
+                    <div class="flex-1 space-y-2">
+                        <div class="flex items-center gap-2">
+                            <div class="h-2 w-2 rounded-full ${ann.type === 'urgent' ? 'bg-destructive shadow-[0_0_8px_rgba(255,0,0,0.5)]' : ann.type === 'sports' ? 'bg-warning' : 'bg-accent'}"></div>
+                            <h3 class="font-bold text-foreground">${ann.title}</h3>
+                        </div>
+                        <p class="text-sm text-muted-foreground leading-relaxed">${ann.content}</p>
+                    </div>
+                    <button onclick="deleteItem('/announcements', '${ann.id}')" class="p-2 text-muted-foreground hover:text-destructive transition-colors">
+                        <i data-lucide="trash-2" class="h-4 w-4"></i>
+                    </button>
+                </div>
+            `).join('') || '<p class="p-8 text-center text-muted-foreground italic">No announcements found</p>';
+            lucide.createIcons();
+        }
+
+        async function fetchEvents() {
+            const res = await fetch(`${API_BASE}/events`);
+            const data = await res.json();
+            const container = document.getElementById('events-list');
+            container.innerHTML = data.data?.slice().reverse().map(ev => `
+                <div class="p-4 rounded-xl bg-card border border-border hover:border-accent/40 transition-all group flex items-start justify-between">
+                    <div class="flex items-start gap-3">
+                        <div class="h-2 w-2 rounded-full mt-1.5 shrink-0 ${ev.type === 'sports' ? 'bg-chart-2' : 'bg-info'}"></div>
+                        <div class="flex-1 min-w-0">
+                            <h3 class="font-bold text-foreground text-sm mb-1.5">${ev.title}</h3>
+                            <div class="space-y-1">
+                                <div class="flex items-center gap-2 text-[10px] font-semibold text-muted-foreground uppercase">
+                                    <i data-lucide="clock" class="h-3 w-3"></i> ${new Date(ev.time).toLocaleString()}
+                                </div>
+                                <div class="flex items-center gap-2 text-[10px] font-semibold text-muted-foreground uppercase">
+                                    <i data-lucide="map-pin" class="h-3 w-3"></i> ${ev.location || 'N/A'}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="deleteItem('/events', '${ev.id}')" class="p-2 text-muted-foreground hover:text-destructive transition-colors">
+                        <i data-lucide="trash-2" class="h-4 w-4"></i>
+                    </button>
+                </div>
+            `).join('') || '<p class="p-8 text-center text-muted-foreground italic">No upcoming events</p>';
+            lucide.createIcons();
+        }
+
+        async function fetchAlerts() {
+            const res = await fetch(`${API_BASE}/alerts`);
+            const data = await res.json();
+            const container = document.getElementById('alerts-list');
+            container.innerHTML = data.data?.slice().reverse().map(al => `
+                <div class="p-4 rounded-xl bg-destructive/5 border border-destructive/20 hover:border-destructive/40 flex items-start justify-between group">
+                    <div class="flex items-start gap-3 min-w-0">
+                        <i data-lucide="alert-triangle" class="h-4 w-4 text-destructive mt-0.5 shrink-0"></i>
+                        <p class="text-sm font-medium text-foreground">${al.message}</p>
+                    </div>
+                    <button onclick="deleteItem('/alerts', '${al.id}')" class="p-2 text-muted-foreground hover:text-destructive shrink-0">
+                        <i data-lucide="trash-2" class="h-4 w-4"></i>
+                    </button>
+                </div>
+            `).join('') || '<p class="p-8 text-center text-muted-foreground italic">No active system alerts</p>';
+            lucide.createIcons();
+        }
+
+        async function fetchUpdates() {
+            const res = await fetch(`${API_BASE}/updates`);
+            const data = await res.json();
+            const container = document.getElementById('updates-list');
+            container.innerHTML = data.data?.slice().reverse().map(up => `
+                <div class="p-4 rounded-xl bg-card border border-border hover:border-accent/40 group flex items-start justify-between">
+                    <div class="flex items-start gap-3 min-w-0">
+                        <i data-lucide="check-circle-2" class="h-4 w-4 text-accent mt-0.5 shrink-0"></i>
+                        <p class="text-sm font-medium text-foreground">${up.message}</p>
+                    </div>
+                    <button onclick="deleteItem('/updates', '${up.id}')" class="p-2 text-muted-foreground hover:text-destructive shrink-0">
+                        <i data-lucide="trash-2" class="h-4 w-4"></i>
+                    </button>
+                </div>
+            `).join('') || '<p class="p-8 text-center text-muted-foreground italic">No recent updates</p>';
+            lucide.createIcons();
+        }
+
+        async function fetchUsers() {
+            const res = await fetch(`${API_BASE}/users`);
+            const data = await res.json();
+            const container = document.getElementById('users-table-body');
+            container.innerHTML = data.data?.map(user => `
+                <tr class="hover:bg-secondary/20 transition-colors">
+                    <td class="px-6 py-4 font-medium text-foreground">${user.name}</td>
+                    <td class="px-6 py-4 text-muted-foreground">${user.email}</td>
+                    <td class="px-6 py-4">
+                        <span class="px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-secondary text-secondary-foreground">
+                            ${user.classId || '-'}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${user.isAdmin ? 'bg-accent/20 text-accent' : 'bg-muted/30 text-muted-foreground'}">
+                            ${user.isAdmin ? 'Admin' : 'Student'}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 text-right space-x-2">
+                        <button onclick="toggleAdmin('${user.id}')" class="p-2 hover:bg-secondary rounded-lg transition-colors text-muted-foreground hover:text-foreground" title="Toggle Admin">
+                            <i data-lucide="shield" class="h-4 w-4"></i>
+                        </button>
+                        <button onclick="deleteItem('/users', '${user.id}')" class="p-2 hover:bg-secondary rounded-lg transition-colors text-muted-foreground hover:text-destructive" title="Delete User">
+                            <i data-lucide="trash-2" class="h-4 w-4"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('') || '';
+            lucide.createIcons();
+        }
+
+        async function fetchSchedule() {
+            const classId = document.getElementById('sched-class-id').value;
+            const res = await fetch(`${API_BASE}/schedules?classId=${classId}`);
+            const data = await res.json();
+            
+            const gridData = data.data?.[0]?.periods || Array(8).fill(null).map(() => Array(5).fill({ name: '', teacher: '', room: '' }));
+            
+            renderScheduleGrid(gridData);
+        }
+
+        function renderScheduleGrid(gridData) {
+            const container = document.getElementById('schedule-grid-container');
+            container.innerHTML = Array(8).fill(0).map((_, pIdx) => `
+                <div class="grid grid-cols-6 border-b border-border last:border-0 hover:bg-secondary/10">
+                    <div class="p-4 flex items-center justify-center border-r border-border font-bold text-muted-foreground">
+                        ${pIdx + 1}
+                    </div>
+                    ${Array(5).fill(0).map((_, dIdx) => {
+                        const cell = gridData[pIdx]?.[dIdx] || { name: '', teacher: '', room: '' };
+                        return `
+                        <div class="p-2 border-r border-border last:border-0 space-y-1">
+                            <input type="text" placeholder="Subject" value="${cell.name || ''}" data-p="${pIdx}" data-d="${dIdx}" data-field="name" class="sched-input w-full px-2 py-1 bg-secondary/50 border border-border rounded text-xs focus:ring-1 focus:ring-accent outline-none">
+                            <div class="grid grid-cols-2 gap-1">
+                                <input type="text" placeholder="Room" value="${cell.room || ''}" data-p="${pIdx}" data-d="${dIdx}" data-field="room" class="sched-input w-full px-1.5 py-0.5 bg-secondary/30 border border-border rounded text-[10px] outline-none">
+                                <input type="text" placeholder="Teach" value="${cell.teacher || ''}" data-p="${pIdx}" data-d="${dIdx}" data-field="teacher" class="sched-input w-full px-1.5 py-0.5 bg-secondary/30 border border-border rounded text-[10px] outline-none">
+                            </div>
+                        </div>
+                        `;
+                    }).join('')}
+                </div>
+            `).join('');
+        }
+
+        async function fetchSavedSchedules() {
+            const res = await fetch(`${API_BASE}/schedules`);
+            const data = await res.json();
+            const container = document.getElementById('saved-schedules-list');
+            
+            if (!data.data || data.data.length === 0) {
+                container.innerHTML = '<p class="text-xs text-muted-foreground italic p-4 text-center border border-dashed border-border rounded-xl">No saved schedules yet</p>';
+                return;
+            }
+
+            container.innerHTML = data.data.map(sched => `
+                <div class="rounded-xl border border-border bg-card overflow-hidden">
+                    <div class="flex items-center justify-between p-3 bg-secondary/10 cursor-pointer hover:bg-secondary/20" onclick="toggleAccordion('${sched.id}')">
+                        <div class="flex items-center gap-3">
+                            <div class="h-8 w-8 rounded-lg bg-accent/10 flex items-center justify-center">
+                                <i data-lucide="book-open" class="h-4 w-4 text-accent"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-foreground">Class: ${sched.classId || 'Global'}</h4>
+                                <p class="text-[10px] text-muted-foreground uppercase font-medium">Weekly Grid</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="loadToEditor('${sched.classId}', event)" class="px-2 py-1 bg-accent/20 text-accent hover:bg-accent hover:text-accent-foreground text-[10px] font-bold rounded-md">EDIT</button>
+                            <button onclick="deleteItem('/schedules', '${sched.id}', event)" class="p-1 text-muted-foreground hover:text-destructive"><i data-lucide="trash-2" class="h-4 w-4"></i></button>
+                            <i data-lucide="chevron-down" class="h-4 w-4 text-muted-foreground" id="icon-${sched.id}"></i>
+                        </div>
+                    </div>
+                    <div id="content-${sched.id}" class="hidden flex flex-col divide-y divide-border border-t border-border bg-black/20">
+                        ${[0,1,2,3,4].map(dIdx => {
+                            const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+                            const subjects = sched.periods.map(row => row[dIdx]?.name).filter(Boolean);
+                            return `
+                                <div class="p-2.5 flex items-start gap-4">
+                                    <span class="text-[10px] font-bold text-muted-foreground uppercase w-8">${days[dIdx]}</span>
+                                    <div class="flex-1 flex flex-wrap gap-1.5">
+                                        ${subjects.length > 0 ? subjects.map(s => `<span class="px-1.5 py-0.5 rounded bg-secondary text-[10px] text-secondary-foreground font-medium">${s}</span>`).join('') : '<span class="text-[10px] text-muted-foreground italic">No classes</span>'}
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function toggleAccordion(id) {
+            const content = document.getElementById(`content-${id}`);
+            const icon = document.getElementById(`icon-${id}`);
+            const isHidden = content.classList.contains('hidden');
+            
+            // Close all others
+            document.querySelectorAll('[id^="content-"]').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('[id^="icon-"]').forEach(el => el.classList.remove('rotate-180'));
+
+            if (isHidden) {
+                content.classList.remove('hidden');
+                icon.classList.add('rotate-180');
+            }
+        }
+
+        function loadToEditor(classId, event) {
+            if (event) event.stopPropagation();
+            document.getElementById('sched-class-id').value = classId;
+            fetchSchedule();
+            setActiveNav('Schedule'); // Just in case
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // --- API Actions ---
+        async function submitUser() {
+            const name = document.getElementById('user-name').value;
+            const email = document.getElementById('user-email').value;
+            const password = document.getElementById('user-password').value;
+            const classId = document.getElementById('user-class').value;
+            const isAdmin = document.getElementById('user-is-admin').checked;
+
+            if (!name || !email || !password) return alert('Fill required fields');
+
+            const res = await fetch(`${API_BASE}/users`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, password, classId, isAdmin })
+            });
+
+            if (res.ok) {
+                closeModal('user');
+                fetchUsers();
+            }
+        }
+
+        async function submitAlert() {
+            const message = document.getElementById('alert-message').value;
+            if (!message) return alert('Message is required');
+
+            await fetch(`${API_BASE}/alerts`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message })
+            });
+            closeModal('alert');
+            document.getElementById('alert-message').value = '';
+            fetchAll();
+        }
+
+        async function submitUpdate() {
+            const message = document.getElementById('update-message').value;
+            if (!message) return alert('Content is required');
+
+            await fetch(`${API_BASE}/updates`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message })
+            });
+            closeModal('update');
+            document.getElementById('update-message').value = '';
+            fetchAll();
+        }
+
+        async function submitAnnouncement() {
+            const title = document.getElementById('ann-title').value;
+            const content = document.getElementById('ann-content').value;
+            const type = document.getElementById('ann-type').value;
+            if (!title || !content) return alert('Fill all fields');
+
+            await fetch(`${API_BASE}/announcements`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title, content, type })
+            });
+            closeModal('ann');
+            fetchAll();
+        }
+
+        async function submitEvent() {
+            const title = document.getElementById('event-title').value;
+            const location = document.getElementById('event-location').value;
+            const time = document.getElementById('event-time').value;
+            const type = document.getElementById('event-type').value;
+            if (!title || !time) return alert('Fill required fields');
+
+            await fetch(`${API_BASE}/events`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title, location, time, type })
+            });
+            closeModal('event');
+            fetchAll();
+        }
+
+        async function deleteItem(endpoint, id) {
+            if (!confirm('Are you sure?')) return;
+            await fetch(`${API_BASE}${endpoint}`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id })
+            });
+            if (endpoint === '/users') fetchUsers();
+            else if (endpoint === '/schedules') fetchSavedSchedules();
+            else fetchAll();
+        }
+
+        async function toggleAdmin(id) {
+            await fetch(`${API_BASE}/users/toggle-admin`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id })
+            });
+            fetchUsers();
+        }
+
+        async function saveSchedule() {
+            const classId = document.getElementById('sched-class-id').value;
+            const grid = Array(8).fill(null).map(() => Array(5).fill({}));
+            document.querySelectorAll('.sched-input').forEach(input => {
+                const p = parseInt(input.getAttribute('data-p'));
+                const d = parseInt(input.getAttribute('data-d'));
+                const field = input.getAttribute('data-field');
+                grid[p][d] = { ...grid[p][d], [field]: input.value };
+            });
+
+            const res = await fetch(`${API_BASE}/schedules`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ periods: grid, classId })
+            });
+            if (res.ok) {
+                alert('Schedule saved!');
+                fetchSavedSchedules();
+            } else alert('Failed to save schedule');
+        }
+
+        // --- UI Logic ---
+        function setActiveNav(label) {
+            document.getElementById('active-nav-title').textContent = label;
+            document.querySelectorAll('.nav-section').forEach(s => s.classList.add('hidden'));
+            const target = document.getElementById(`section-${label}`);
+            if (target) target.classList.remove('hidden');
+
+            document.querySelectorAll('.nav-item').forEach(btn => {
+                if (btn.getAttribute('data-nav') === label) {
+                    btn.classList.add('bg-secondary', 'text-foreground');
+                    btn.classList.remove('text-muted-foreground', 'hover:text-foreground', 'hover:bg-secondary/50');
+                } else {
+                    btn.classList.remove('bg-secondary', 'text-foreground');
+                    btn.classList.add('text-muted-foreground', 'hover:text-foreground', 'hover:bg-secondary/50');
+                }
+            });
+        }
+
+        function openModal(id) { document.getElementById(`modal-${id}`).classList.remove('hidden'); }
+        function closeModal(id) { document.getElementById(`modal-${id}`).classList.add('hidden'); }
+
+        // --- Init ---
+        (async () => {
+            lucide.createIcons();
+            await checkAdminAuth();
+            await fetchAll();
+        })();
+    </script>
 </body>
 </html>
