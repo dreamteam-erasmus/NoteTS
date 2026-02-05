@@ -7,6 +7,7 @@ import eventRouter from './events.js';
 import updateRouter from './updates.js';
 import alertRouter from './alerts.js';
 import scheduleRouter from './schedules.js';
+import displaysRouter from './displays.js';
 
 const router = Router();
 
@@ -17,6 +18,7 @@ router.use('/events', eventRouter);
 router.use('/alerts', alertRouter);
 router.use('/updates', updateRouter);
 router.use('/schedules', scheduleRouter);
+router.use('/displays', displaysRouter);
 
 // API root endpoint
 router.get('/', (_req, res) => {

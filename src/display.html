@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display | NoteTS</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style type="text/tailwindcss">
+        @custom-variant dark (&:is(.dark *));
+        :root {
+            --background: oklch(0.12 0.005 250);
+            --foreground: oklch(0.93 0 0);
+            --card: oklch(0.16 0.005 250);
+            --card-foreground: oklch(0.93 0 0);
+            --primary: oklch(0.93 0 0);
+            --primary-foreground: oklch(0.12 0.005 250);
+            --secondary: oklch(0.2 0.005 250);
+            --secondary-foreground: oklch(0.8 0 0);
+            --muted: oklch(0.22 0.005 250);
+            --muted-foreground: oklch(0.55 0 0);
+            --accent: oklch(70% 0.11 244);
+            --accent-foreground: oklch(0.12 0.005 250);
+            --destructive: oklch(0.62 0.2 25);
+            --destructive-foreground: oklch(0.93 0 0);
+            --border: oklch(0.24 0.005 250);
+            --chart-2: oklch(0.78 0.14 75);
+            --chart-4: oklch(83% 0.08 242);
+            --info: oklch(70% 0.11 244);
+        }
+
+        @theme inline {
+            --color-background: var(--background);
+            --color-foreground: var(--foreground);
+            --color-card: var(--card);
+            --color-card-foreground: var(--card-foreground);
+            --color-primary: var(--primary);
+            --color-primary-foreground: var(--primary-foreground);
+            --color-secondary: var(--secondary);
+            --color-secondary-foreground: var(--secondary-foreground);
+            --color-muted: var(--muted);
+            --color-muted-foreground: var(--muted-foreground);
+            --color-accent: var(--accent);
+            --color-accent-foreground: var(--accent-foreground);
+            --color-destructive: var(--destructive);
+            --color-destructive-foreground: var(--destructive-foreground);
+            --color-border: var(--border);
+            --color-chart-2: var(--chart-2);
+            --color-chart-4: var(--chart-4);
+            --color-info: var(--info);
+        }
+
+        @keyframes progress {
+            from { width: 0%; }
+            to { width: 100%; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .animate-pulse {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .progress-bar {
+            animation: progress 8s linear forwards;
+        }
+    </style>
+</head>
+<body class="bg-background text-foreground overflow-hidden">
+    <div class="h-screen w-screen flex flex-col">
+        <!-- Alert Banner -->
+        <div id="alert_banner" class="hidden bg-destructive/10 border-b border-destructive/20 px-6 py-3 flex items-center justify-between shrink-0">
+            <div class="flex items-center gap-3">
+                <div class="h-2 w-2 rounded-full bg-destructive animate-pulse"></div>
+                <p class="text-sm text-destructive font-medium" id="alert_message">Loading alert...</p>
+            </div>
+            <button onclick="dismissAlert()" id="dismiss_btn" class="text-destructive/60 hover:text-destructive text-sm opacity-0">
+                Dismiss
+            </button>
+        </div>
+
+        <!-- Controls Overlay (visible on mouse move) - positioned at bottom to avoid covering content -->
+        <div id="controls_left" class="fixed bottom-4 left-4 z-50 opacity-0 transition-opacity duration-300">
+            <a href="/admin.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-card/90 backdrop-blur border border-border text-sm text-muted-foreground hover:text-foreground">
+                <i data-lucide="settings" class="h-4 w-4"></i>
+                Admin
+            </a>
+        </div>
+
+        <div id="controls_right" class="fixed bottom-4 right-4 z-50 opacity-0 transition-opacity duration-300">
+            <div id="connection_status" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm bg-accent/10 text-accent">
+                <i data-lucide="wifi" class="h-4 w-4"></i>
+                <span>Connected</span>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 p-8 grid grid-cols-12 gap-6 min-h-0">
+            <!-- Left Column - Time & Weather -->
+            <div class="col-span-3 flex flex-col gap-6">
+                <!-- Clock -->
+                <div class="rounded-2xl bg-card border border-border p-8">
+                    <p class="text-7xl font-light text-foreground tracking-tight mb-2" id="clock_display">12:00 PM</p>
+                    <p class="text-lg text-muted-foreground" id="date_display">Monday, January 1</p>
+                </div>
+
+                <!-- Weather -->
+                <div class="rounded-2xl bg-card border border-border p-6" data-section="weather">
+                    <div class="flex items-start justify-between mb-4">
+                        <div>
+                            <p class="text-5xl font-light text-foreground" id="weather_temp">--°</p>
+                            <p class="text-muted-foreground mt-1" id="weather_condition">Loading...</p>
+                        </div>
+                        <i data-lucide="cloud-sun" class="h-12 w-12 text-chart-2" id="weather_icon"></i>
+                    </div>
+                    <div class="flex items-center gap-1 text-sm text-muted-foreground">
+                        <i data-lucide="map-pin" class="h-4 w-4"></i>
+                        <span id="weather_location">Locating...</span>
+                    </div>
+                </div>
+
+                <!-- Cafeteria Menu -->
+                <div class="rounded-2xl bg-card border border-border p-6 flex-1">
+                    <div class="flex items-center gap-2 mb-4">
+                        <i data-lucide="utensils" class="h-4 w-4 text-accent"></i>
+                        <h3 class="text-sm font-medium text-foreground">Today's Menu</h3>
+                    </div>
+                    <div class="space-y-4">
+                        <div>
+                            <p class="text-xs text-muted-foreground mb-1">Main</p>
+                            <p class="text-lg text-foreground">Chicken Tacos</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-muted-foreground mb-1">Side</p>
+                            <p class="text-foreground">Rice & Beans</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-muted-foreground mb-1">Dessert</p>
+                            <p class="text-foreground">Churros</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Center Column - Announcements -->
+            <div class="col-span-6 flex flex-col">
+                <div class="rounded-2xl bg-card border border-border p-10 flex-1 flex flex-col">
+                    <div class="flex items-center justify-between mb-8">
+                        <h2 class="text-sm font-medium text-muted-foreground uppercase tracking-wider">Announcements</h2>
+                        <div class="flex gap-2" id="announcement_dots">
+                            <!-- Dots injected by JS -->
+                        </div>
+                    </div>
+
+                    <div class="flex-1 flex flex-col justify-center" id="announcement_content">
+                        <div class="mb-6 flex items-center gap-3">
+                            <div class="h-3 w-3 rounded-full bg-accent" id="announcement_dot"></div>
+                            <span class="text-sm text-muted-foreground capitalize" id="announcement_category">general</span>
+                        </div>
+                        <h3 class="text-5xl font-medium text-foreground mb-6 leading-tight text-balance" id="announcement_title">Loading...</h3>
+                        <p class="text-2xl text-muted-foreground leading-relaxed" id="announcement_body">Please wait while announcements load.</p>
+                    </div>
+
+                    <!-- Progress bar -->
+                    <div class="mt-auto pt-8">
+                        <div class="h-1 bg-border rounded-full overflow-hidden">
+                            <div class="h-full bg-accent rounded-full progress-bar" id="progress_bar"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column - Events -->
+            <div class="col-span-3 flex flex-col" data-section="events">
+                <div class="rounded-2xl bg-card border border-border p-6 flex-1 flex flex-col">
+                    <h3 class="text-sm font-medium text-foreground mb-6 uppercase tracking-wider">Upcoming Events</h3>
+                    <div class="space-y-1 flex-1" id="events_list">
+                        <!-- Events injected by JS -->
+                        <div class="p-6 text-center text-muted-foreground text-sm italic">Loading events...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ticker -->
+        <div class="h-14 bg-card border-t border-border flex items-center overflow-hidden shrink-0" data-section="ticker">
+            <div class="bg-accent px-6 h-full flex items-center shrink-0">
+                <span class="text-sm font-medium text-accent-foreground uppercase tracking-wider">Updates</span>
+            </div>
+            <div class="flex-1 overflow-hidden">
+                <div class="whitespace-nowrap text-base text-muted-foreground" id="ticker_content" style="transform: translateX(0px);">
+                    Loading updates...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="/scripts/display.ts"></script>
+</body>
+</html>

@@ -69,16 +69,203 @@ async function fetchAll() {
         fetchSavedSchedules(),
         fetchAlerts(),
         fetchUpdates(),
+        fetchDisplays(),
         fetchStats()
     ]);
 }
 
+async function fetchDisplays() {
+    const container = document.getElementById('displays-list');
+    const countEl = document.getElementById('displays-count');
+    const onlineEl = document.getElementById('displays-online');
+    if (!container) return;
+
+    try {
+        const res = await fetch(`${API_BASE}/displays`);
+        const data = await res.json();
+        const displays = data.data || [];
+
+        // Update counts
+        const onlineCount = displays.filter((d: any) => d.isOnline).length;
+        if (countEl) countEl.textContent = `${displays.length} display${displays.length !== 1 ? 's' : ''}`;
+        if (onlineEl) onlineEl.textContent = `${onlineCount} online`;
+
+        if (displays.length === 0) {
+            container.innerHTML = '<p class="p-8 text-center text-muted-foreground italic">No displays registered yet. Open the display page to register a new display.</p>';
+            lucide.createIcons();
+            return;
+        }
+
+        container.innerHTML = displays.map((d: any) => {
+            const lastSeen = new Date(d.lastSeen);
+            const isOnline = d.isOnline;
+            const timeDiff = Date.now() - lastSeen.getTime();
+            const timeAgo = timeDiff < 60000 ? 'Just now' :
+                timeDiff < 3600000 ? `${Math.floor(timeDiff / 60000)}m ago` :
+                    timeDiff < 86400000 ? `${Math.floor(timeDiff / 3600000)}h ago` :
+                        `${Math.floor(timeDiff / 86400000)}d ago`;
+
+            const s = d.settings || { theme: 'auto', showAnnouncements: true, showEvents: true, showWeather: true, showTicker: true };
+
+            return `
+                <div class="p-4 hover:bg-secondary/5">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="h-10 w-10 rounded-xl ${isOnline ? 'bg-success/10' : 'bg-muted/20'} flex items-center justify-center shrink-0">
+                                <i data-lucide="monitor" class="h-5 w-5 ${isOnline ? 'text-success' : 'text-muted-foreground'}"></i>
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <input type="text" value="${d.name}" onchange="renameDisplay('${d.id}', this.value)" class="font-medium text-foreground bg-transparent border-0 outline-none focus:ring-1 focus:ring-accent rounded px-1 -ml-1" />
+                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${isOnline ? 'bg-success/20 text-success' : 'bg-muted/30 text-muted-foreground'}">
+                                        ${isOnline ? 'Online' : 'Offline'}
+                                    </span>
+                                    ${d.group ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-accent/20 text-accent">${d.group}</span>` : ''}
+                                </div>
+                                <p class="text-xs text-muted-foreground mt-0.5">Last seen: ${timeAgo}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <button onclick="toggleDisplaySettings('${d.id}')" class="p-2 hover:bg-secondary rounded-lg transition-colors text-muted-foreground hover:text-foreground" title="Settings">
+                                <i data-lucide="settings" class="h-4 w-4"></i>
+                            </button>
+                            <button onclick="sendDisplayCommand('${d.id}', 'identify')" class="p-2 hover:bg-secondary rounded-lg transition-colors text-muted-foreground hover:text-accent" title="Identify">
+                                <i data-lucide="scan-eye" class="h-4 w-4"></i>
+                            </button>
+                            <button onclick="promptDisplayMessage('${d.id}')" class="p-2 hover:bg-secondary rounded-lg transition-colors text-muted-foreground hover:text-info" title="Message">
+                                <i data-lucide="message-square" class="h-4 w-4"></i>
+                            </button>
+                            <button onclick="sendDisplayCommand('${d.id}', 'refresh')" class="p-2 hover:bg-secondary rounded-lg transition-colors text-muted-foreground hover:text-accent" title="Refresh">
+                                <i data-lucide="refresh-cw" class="h-4 w-4"></i>
+                            </button>
+                            <button onclick="deleteItem('/displays', '${d.id}')" class="p-2 hover:bg-secondary rounded-lg transition-colors text-muted-foreground hover:text-destructive" title="Remove">
+                                <i data-lucide="trash-2" class="h-4 w-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Settings Panel (hidden by default) -->
+                    <div id="settings-${d.id}" class="hidden mt-4 pt-4 border-t border-border">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-xs text-muted-foreground uppercase tracking-wider">Theme</label>
+                                <select onchange="updateDisplaySetting('${d.id}', 'theme', this.value)" class="mt-1 w-full bg-secondary border border-border rounded-lg px-3 py-2 text-sm text-foreground">
+                                    <option value="auto" ${s.theme === 'auto' ? 'selected' : ''}>Auto (Dark)</option>
+                                    <option value="dark" ${s.theme === 'dark' ? 'selected' : ''}>Dark</option>
+                                    <option value="light" ${s.theme === 'light' ? 'selected' : ''}>Light</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-xs text-muted-foreground uppercase tracking-wider">Group</label>
+                                <input type="text" value="${d.group || ''}" onchange="updateDisplayGroup('${d.id}', this.value)" placeholder="e.g. Lobby" class="mt-1 w-full bg-secondary border border-border rounded-lg px-3 py-2 text-sm text-foreground" />
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <label class="text-xs text-muted-foreground uppercase tracking-wider">Visible Sections</label>
+                            <div class="mt-2 flex flex-wrap gap-2">
+                                <label class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-secondary text-sm cursor-pointer">
+                                    <input type="checkbox" ${s.showAnnouncements ? 'checked' : ''} onchange="updateDisplaySetting('${d.id}', 'showAnnouncements', this.checked)" class="rounded" /> Announcements
+                                </label>
+                                <label class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-secondary text-sm cursor-pointer">
+                                    <input type="checkbox" ${s.showEvents ? 'checked' : ''} onchange="updateDisplaySetting('${d.id}', 'showEvents', this.checked)" class="rounded" /> Events
+                                </label>
+                                <label class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-secondary text-sm cursor-pointer">
+                                    <input type="checkbox" ${s.showWeather ? 'checked' : ''} onchange="updateDisplaySetting('${d.id}', 'showWeather', this.checked)" class="rounded" /> Weather
+                                </label>
+                                <label class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-secondary text-sm cursor-pointer">
+                                    <input type="checkbox" ${s.showTicker ? 'checked' : ''} onchange="updateDisplaySetting('${d.id}', 'showTicker', this.checked)" class="rounded" /> Ticker
+                                </label>
+                            </div>
+                        </div>
+                        <div class="mt-4 grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-xs text-muted-foreground uppercase tracking-wider">Active Hours Start</label>
+                                <input type="time" value="${s.activeHours?.start || ''}" onchange="updateActiveHours('${d.id}', 'start', this.value)" class="mt-1 w-full bg-secondary border border-border rounded-lg px-3 py-2 text-sm text-foreground" />
+                            </div>
+                            <div>
+                                <label class="text-xs text-muted-foreground uppercase tracking-wider">Active Hours End</label>
+                                <input type="time" value="${s.activeHours?.end || ''}" onchange="updateActiveHours('${d.id}', 'end', this.value)" class="mt-1 w-full bg-secondary border border-border rounded-lg px-3 py-2 text-sm text-foreground" />
+                            </div>
+                        </div>
+                        <p class="mt-2 text-xs text-muted-foreground">Leave blank to keep display always on</p>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        lucide.createIcons();
+    } catch (e) {
+        container.innerHTML = '<p class="p-8 text-center text-muted-foreground italic">Failed to load displays</p>';
+    }
+}
+
+async function renameDisplay(id: string, name: string) {
+    await fetch(`${API_BASE}/displays/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name })
+    });
+}
+
+async function sendDisplayCommand(displayId: string, command: string, data?: any) {
+    await fetch(`${API_BASE}/displays/${displayId}/command`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ command, data })
+    });
+}
+
+function promptDisplayMessage(displayId: string) {
+    const text = prompt('Enter message to display:');
+    if (text && text.trim()) {
+        sendDisplayCommand(displayId, 'message', { text: text.trim() });
+    }
+}
+
+function toggleDisplaySettings(displayId: string) {
+    const panel = document.getElementById(`settings-${displayId}`);
+    if (panel) {
+        panel.classList.toggle('hidden');
+    }
+}
+
+async function updateDisplaySetting(displayId: string, key: string, value: any) {
+    await fetch(`${API_BASE}/displays/${displayId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ settings: { [key]: value } })
+    });
+}
+
+async function updateDisplayGroup(displayId: string, group: string) {
+    await fetch(`${API_BASE}/displays/${displayId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ group: group || undefined })
+    });
+    fetchDisplays();
+}
+
+async function updateActiveHours(displayId: string, field: 'start' | 'end', value: string) {
+    // Get current display to preserve other active hours field
+    const res = await fetch(`${API_BASE}/displays/${displayId}`);
+    const data = await res.json();
+    const current = data.data?.settings?.activeHours || {};
+
+    const newActiveHours = value ? { ...current, [field]: value } : undefined;
+
+    await fetch(`${API_BASE}/displays/${displayId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ settings: { activeHours: newActiveHours } })
+    });
+}
+
 async function fetchStats() {
-    const [ann, ev, usr, alr] = await Promise.all([
+    const [ann, ev, usr, alr, upd] = await Promise.all([
         fetch(`${API_BASE}/announcements`).then(r => r.json()),
         fetch(`${API_BASE}/events`).then(r => r.json()),
         fetch(`${API_BASE}/users`).then(r => r.json()),
-        fetch(`${API_BASE}/alerts`).then(r => r.json())
+        fetch(`${API_BASE}/alerts`).then(r => r.json()),
+        fetch(`${API_BASE}/updates`).then(r => r.json())
     ]);
     const statAnn = document.getElementById('stat-ann-count');
     const statEvent = document.getElementById('stat-event-count');
@@ -88,6 +275,16 @@ async function fetchStats() {
     if (statEvent) statEvent.textContent = String(ev.data?.length || 0);
     if (statUser) statUser.textContent = String(usr.data?.length || 0);
     if (statAlert) statAlert.textContent = String(alr.data?.length || 0);
+
+    // Display section stats
+    const displayAnn = document.getElementById('display-ann-count');
+    const displayEvent = document.getElementById('display-event-count');
+    const displayAlert = document.getElementById('display-alert-count');
+    const displayUpdate = document.getElementById('display-update-count');
+    if (displayAnn) displayAnn.textContent = String(ann.data?.length || 0);
+    if (displayEvent) displayEvent.textContent = String(ev.data?.length || 0);
+    if (displayAlert) displayAlert.textContent = String(alr.data?.length || 0);
+    if (displayUpdate) displayUpdate.textContent = String(upd.data?.length || 0);
 }
 
 async function fetchAnnouncements() {
@@ -429,6 +626,7 @@ async function deleteItem(endpoint: string, id: string, event?: Event) {
     });
     if (endpoint === '/users') fetchUsers();
     else if (endpoint === '/schedules') fetchSavedSchedules();
+    else if (endpoint === '/displays') fetchDisplays();
     else fetchAll();
 }
 
@@ -506,6 +704,14 @@ function closeModal(id: string) {
 (window as any).toggleAccordion = toggleAccordion;
 (window as any).loadToEditor = loadToEditor;
 (window as any).fetchSchedule = fetchSchedule;
+(window as any).fetchDisplays = fetchDisplays;
+(window as any).renameDisplay = renameDisplay;
+(window as any).sendDisplayCommand = sendDisplayCommand;
+(window as any).promptDisplayMessage = promptDisplayMessage;
+(window as any).toggleDisplaySettings = toggleDisplaySettings;
+(window as any).updateDisplaySetting = updateDisplaySetting;
+(window as any).updateDisplayGroup = updateDisplayGroup;
+(window as any).updateActiveHours = updateActiveHours;
 
 // --- Init ---
 (async () => {

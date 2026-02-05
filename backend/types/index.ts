@@ -76,6 +76,49 @@ export class Alert {
     }
 }
 
+export interface DisplaySettings {
+    theme: 'light' | 'dark' | 'auto';
+    showAnnouncements: boolean;
+    showEvents: boolean;
+    showWeather: boolean;
+    showTicker: boolean;
+    activeHours?: { start: string; end: string }; // "08:00" - "18:00"
+}
+
+export const DEFAULT_DISPLAY_SETTINGS: DisplaySettings = {
+    theme: 'auto',
+    showAnnouncements: true,
+    showEvents: true,
+    showWeather: true,
+    showTicker: true,
+};
+
+export class Display {
+    id: string
+    name: string
+    lastSeen: Date
+    isOnline: boolean
+    userAgent?: string
+    createdAt: Date
+    group?: string
+    settings: DisplaySettings
+
+    constructor(name: string = 'Unnamed Display', userAgent?: string) {
+        this.id = randomUUID()
+        this.name = name
+        this.lastSeen = new Date()
+        this.isOnline = true
+        this.userAgent = userAgent
+        this.createdAt = new Date()
+        this.settings = { ...DEFAULT_DISPLAY_SETTINGS }
+    }
+
+    ping() {
+        this.lastSeen = new Date()
+        this.isOnline = true
+    }
+}
+
 export class Class {
     studentsIds: string[]
     scheduleId: string

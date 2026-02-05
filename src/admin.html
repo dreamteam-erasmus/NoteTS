@@ -321,9 +321,44 @@
                         </div>
                     </div>
 
-                    <!-- Placeholder Sections -->
-                    <div id="section-Displays" class="nav-section hidden p-12 text-center text-muted-foreground border border-dashed border-border rounded-2xl italic">
-                        Display settings coming soon...
+                    <!-- Displays Section -->
+                    <div id="section-Displays" class="nav-section hidden space-y-6">
+                        <!-- Header with Open Display link -->
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h2 class="text-lg font-bold text-foreground">Display Management</h2>
+                                <p class="text-sm text-muted-foreground mt-1">Manage connected IoT display screens</p>
+                            </div>
+                            <a href="/display.html" target="_blank" class="flex items-center gap-2 px-4 py-2 rounded-lg bg-accent text-accent-foreground text-sm font-medium hover:bg-accent/90">
+                                <i data-lucide="external-link" class="h-4 w-4"></i>
+                                Open Display
+                            </a>
+                        </div>
+
+                        <!-- Registered Displays -->
+                        <div class="rounded-2xl bg-card border border-border overflow-hidden">
+                            <div class="p-4 border-b border-border flex items-center justify-between bg-secondary/10">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-sm font-bold text-foreground" id="displays-count">0 displays</span>
+                                    <span class="text-xs text-muted-foreground">•</span>
+                                    <span class="text-xs text-success font-medium" id="displays-online">0 online</span>
+                                </div>
+                                <button onclick="fetchDisplays()" class="p-2 hover:bg-secondary rounded-lg transition-colors text-muted-foreground hover:text-foreground" title="Refresh">
+                                    <i data-lucide="refresh-cw" class="h-4 w-4"></i>
+                                </button>
+                            </div>
+                            <div id="displays-list" class="divide-y divide-border">
+                                <p class="p-8 text-center text-muted-foreground italic">Loading displays...</p>
+                            </div>
+                        </div>
+
+                        <!-- Keyboard Shortcuts Info -->
+                        <div class="rounded-xl bg-secondary/10 border border-border p-4 flex items-center gap-4">
+                            <i data-lucide="info" class="h-5 w-5 text-muted-foreground shrink-0"></i>
+                            <div class="text-sm text-muted-foreground">
+                                <span class="font-medium text-foreground">Tip:</span> Open <code class="px-1.5 py-0.5 rounded bg-secondary text-[10px] font-mono">/display.html</code> in any browser to register a new display. Press <kbd class="px-1.5 py-0.5 rounded bg-secondary text-[10px] font-mono">F</kbd> for fullscreen.
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

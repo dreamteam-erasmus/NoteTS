@@ -10,6 +10,7 @@ import { loadEventsDB } from './dataManager/eventsDB.js';
 import { loadAlertDB as loadAlertsDB } from './dataManager/alertsDB.js';
 import { loadUpdateDB as loadUpdatesDB } from './dataManager/updatesDB.js';
 import { loadScheduleDB } from './dataManager/schedulesDB.js';
+import { loadDisplayDB } from './dataManager/displaysDB.js';
 import { authCheck, authCheckAdmin, authenticate, authenticateAdmin } from './middleware/auth.js';
 
 // Initialize Express app
@@ -93,6 +94,7 @@ await loadEventsDB()
 await loadAlertsDB()
 await loadUpdatesDB()
 await loadScheduleDB()
+await loadDisplayDB()
 
 // ===================
 // Start Server
