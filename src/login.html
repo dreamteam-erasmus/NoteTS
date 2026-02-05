@@ -1,42 +1,151 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="styles/main.css">
+    <title>Login | NoteTS</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style type="text/tailwindcss">
+        @custom-variant dark (&:is(.dark *));
+        :root {
+            --background: oklch(0.12 0.005 250);
+            --foreground: oklch(0.93 0 0);
+            --card: oklch(0.16 0.005 250);
+            --card-foreground: oklch(0.93 0 0);
+            --primary: oklch(0.93 0 0);
+            --primary-foreground: oklch(0.12 0.005 250);
+            --secondary: oklch(0.2 0.005 250);
+            --secondary-foreground: oklch(0.8 0 0);
+            --muted: oklch(0.22 0.005 250);
+            --muted-foreground: oklch(0.55 0 0);
+            --accent: oklch(70% 0.11 244);
+            --accent-foreground: oklch(0.12 0.005 250);
+            --destructive: oklch(0.62 0.2 25);
+            --border: oklch(0.24 0.005 250);
+            --input: oklch(0.18 0.005 250);
+            --ring: oklch(70% 0.11 244);
+        }
+
+        @theme inline {
+            --color-background: var(--background);
+            --color-foreground: var(--foreground);
+            --color-card: var(--card);
+            --color-card-foreground: var(--card-foreground);
+            --color-primary: var(--primary);
+            --color-primary-foreground: var(--primary-foreground);
+            --color-secondary: var(--secondary);
+            --color-secondary-foreground: var(--secondary-foreground);
+            --color-muted: var(--muted);
+            --color-muted-foreground: var(--muted-foreground);
+            --color-accent: var(--accent);
+            --color-accent-foreground: var(--accent-foreground);
+            --color-destructive: var(--destructive);
+            --color-border: var(--border);
+            --color-input: var(--input);
+            --color-ring: var(--ring);
+        }
+    </style>
 </head>
+<body class="bg-background text-foreground min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-xs">
+        <!-- Logo -->
+        <div class="flex justify-center mb-8">
+            <img src="assets/images/logo-dark.png" class="h-10 w-10">
+        </div>
 
-<body>
-    <input type="text" id="login"> <br>
-    <input type="password" id="password"> <br>
-    <button id="loginBtn">Login</button>
+        <!-- Login Form -->
+        <div class="space-y-6">
+            <div class="text-center">
+                <h1 class="text-lg font-semibold text-foreground">Sign in to NoteTS</h1>
+            </div>
+
+            <!-- Error (hidden by default) -->
+            <div id="error-banner" class="hidden text-center text-sm text-destructive">
+                Přihlášení se nezdařilo
+            </div>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-foreground mb-1.5">Username</label>
+                    <input type="text" id="login" class="w-full px-3 py-2 bg-card border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent" placeholder="username">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-foreground mb-1.5">Password</label>
+                    <input type="password" id="password" class="w-full px-3 py-2 bg-card border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent" placeholder="••••••••">
+                </div>
+
+                <button id="loginBtn" class="w-full py-2 bg-foreground text-background rounded-lg text-sm font-medium hover:bg-foreground/90 disabled:opacity-50 disabled:cursor-not-allowed">
+                    Continue
+                </button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-8 text-center space-y-3">
+            <a href="/display.html" class="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground">
+                <i data-lucide="monitor" class="h-3 w-3"></i>
+                Open Display
+            </a>
+            <p class="text-xs text-muted-foreground">
+                Secured by NoteTS
+            </p>
+        </div>
+    </div>
+
     <script>
-        const loginInput = document.getElementById("login")
-        const passwordInput = document.getElementById("password")        
-        document.getElementById("loginBtn")?.addEventListener("click", async () => {
-                    console.log(loginInput.value);
-        console.log(passwordInput.value);
-            const json = await (await fetch("/api/users/login", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    name: loginInput.value,
-                    password: passwordInput.value
-                })
-            })).json()
-            console.log(json);
+        lucide.createIcons();
 
-            if (json.data === true) {
-                window.location.href = "/dash.html";
-            } else {
-                alert("Přihlášení se nezdařilo. Zkontrolujte jméno a heslo.");
+        const loginInput = document.getElementById("login");
+        const passwordInput = document.getElementById("password");
+        const loginBtn = document.getElementById("loginBtn");
+        const errorBanner = document.getElementById("error-banner");
+
+        function checkFields() {
+            loginBtn.disabled = !(loginInput.value.trim() && passwordInput.value.trim());
+        }
+        loginInput.addEventListener("input", checkFields);
+        passwordInput.addEventListener("input", checkFields);
+        checkFields();
+
+        function handleSubmit(e) {
+            if (e.key === "Enter" && !loginBtn.disabled) handleLogin();
+        }
+        passwordInput.addEventListener("keydown", handleSubmit);
+        loginInput.addEventListener("keydown", handleSubmit);
+        loginBtn.addEventListener("click", handleLogin);
+
+        async function handleLogin() {
+            loginBtn.textContent = "Signing in...";
+            loginBtn.disabled = true;
+            errorBanner.classList.add("hidden");
+
+            try {
+                const res = await fetch("/api/users/login", {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: loginInput.value,
+                        password: passwordInput.value
+                    })
+                });
+                const json = await res.json();
+
+                if (json.data === true) {
+                    window.location.href = "/dash.html";
+                } else {
+                    errorBanner.classList.remove("hidden");
+                    loginBtn.textContent = "Continue";
+                    checkFields();
+                }
+            } catch (err) {
+                errorBanner.textContent = "Connection error";
+                errorBanner.classList.remove("hidden");
+                loginBtn.textContent = "Continue";
+                checkFields();
             }
-        })
+        }
     </script>
 </body>
-
 </html>
