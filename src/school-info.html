@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Info | NoteTS</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style type="text/tailwindcss">
+        @custom-variant dark (&:is(.dark *));
+        :root {
+        --background: oklch(0.12 0.005 250);
+        --foreground: oklch(0.93 0 0);
+        --card: oklch(0.16 0.005 250);
+        --card-foreground: oklch(0.93 0 0);
+        --popover: oklch(0.16 0.005 250);
+        --popover-foreground: oklch(0.93 0 0);
+        --primary: oklch(0.93 0 0);
+        --primary-foreground: oklch(0.12 0.005 250);
+        --secondary: oklch(0.2 0.005 250);
+        --secondary-foreground: oklch(0.8 0 0);
+        --muted: oklch(0.22 0.005 250);
+        --muted-foreground: oklch(0.55 0 0);
+        --accent: oklch(70% 0.11 244);
+        --accent-foreground: oklch(0.12 0.005 250);
+        --destructive: oklch(0.62 0.2 25);
+        --destructive-foreground: oklch(0.93 0 0);
+        --border: oklch(0.24 0.005 250);
+        --input: oklch(0.18 0.005 250);
+        --ring: oklch(70% 0.11 244);
+        --radius: 0.625rem;
+        --sidebar: oklch(0.14 0.005 250);
+        --sidebar-foreground: oklch(0.93 0 0);
+        --sidebar-primary: oklch(0.93 0 0);
+        --sidebar-primary-foreground: oklch(0.12 0.005 250);
+        --sidebar-accent: oklch(0.2 0.005 250);
+        --sidebar-accent-foreground: oklch(0.93 0 0);
+        --sidebar-border: oklch(0.24 0.005 250);
+        --sidebar-ring: oklch(70% 0.11 244);
+        --success: oklch(0.72 0.14 145);
+        --warning: oklch(0.78 0.14 75);
+        --info: oklch(70% 0.11 244);
+        }
+
+        @theme inline {
+        --color-success: var(--success);
+        --color-warning: var(--warning);
+        --color-info: var(--info);
+        --color-background: var(--background);
+        --color-foreground: var(--foreground);
+        --color-card: var(--card);
+        --color-card-foreground: var(--card-foreground);
+        --color-popover: var(--popover);
+        --color-popover-foreground: var(--popover-foreground);
+        --color-primary: var(--primary);
+        --color-primary-foreground: var(--primary-foreground);
+        --color-secondary: var(--secondary);
+        --color-secondary-foreground: var(--secondary-foreground);
+        --color-muted: var(--muted);
+        --color-muted-foreground: var(--muted-foreground);
+        --color-accent: var(--accent);
+        --color-accent-foreground: var(--accent-foreground);
+        --color-destructive: var(--destructive);
+        --color-destructive-foreground: var(--destructive-foreground);
+        --color-border: var(--border);
+        --color-input: var(--input);
+        --color-ring: var(--ring);
+        --radius-sm: calc(var(--radius) - 4px);
+        --radius-md: calc(var(--radius) - 2px);
+        --radius-lg: var(--radius);
+        --radius-xl: calc(var(--radius) + 4px);
+        --color-sidebar: var(--sidebar);
+        --color-sidebar-foreground: var(--sidebar-foreground);
+        --color-sidebar-primary: var(--sidebar-primary);
+        --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+        --color-sidebar-accent: var(--sidebar-accent);
+        --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+        --color-sidebar-border: var(--sidebar-border);
+        --color-sidebar-ring: var(--sidebar-ring);
+        }
+    </style>
+</head>
+<body class="bg-background text-foreground selection:bg-accent/30 overflow-x-hidden">
+    <div class="min-h-screen lg:flex">
+        <!-- Desktop Sidebar -->
+        <aside class="hidden lg:flex w-64 h-screen sticky top-0 flex-col border-r border-border bg-card">
+            <div class="p-4 border-b border-border">
+                <a href="/" class="flex items-center gap-2.5">
+                    <div class="h-8 w-8 rounded-lg flex items-center justify-center">
+                        <img src="assets/images/logo-dark.png" class="h-6 w-6">
+                    </div>
+                    <span class="font-semibold text-foreground text-sm tracking-tight">NoteTS</span>
+                </a>
+            </div>
+
+            <div class="p-4 border-b border-border">
+                <div class="flex items-center gap-3">
+                    <div class="h-10 w-10 rounded-full bg-accent/20 flex items-center justify-center">
+                        <i data-lucide="user" class="h-5 w-5 text-accent"></i>
+                    </div>
+                    <div>
+                        <p class="font-medium text-foreground text-sm" id="user_name_display">Loading...</p>
+                        <p class="text-xs text-muted-foreground" id="user_role_display">Loading...</p>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="flex-1 p-2 space-y-1">
+                <a href="/dash.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary/50">
+                    <i data-lucide="layout-dashboard" class="h-4 w-4"></i>
+                    Overview
+                </a>
+                <a href="/school-info.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-secondary text-foreground">
+                    <i data-lucide="school" class="h-4 w-4"></i>
+                    School Info
+                </a>
+                <a href="/admin.html" id="admin-nav-link" class="hidden flex items-center gap-2.5 px-3 py-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary/50">
+                    <i data-lucide="shield" class="h-4 w-4"></i>
+                    Admin
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 min-w-0 bg-background">
+            <header class="lg:hidden sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border">
+                <div class="flex items-center justify-between p-4">
+                    <div class="flex items-center gap-2.5">
+                        <img src="assets/images/logo-dark.png" class="h-6 w-6">
+                        <span class="font-semibold text-foreground text-sm tracking-tight">NoteTS</span>
+                    </div>
+                    <button id="mobile-menu-toggle" class="p-2 hover:bg-secondary rounded-lg">
+                        <i data-lucide="menu" class="h-5 w-5"></i>
+                    </button>
+                </div>
+            </header>
+
+            <div class="p-4 lg:p-8 max-w-7xl mx-auto space-y-8">
+                <!-- Page Header -->
+                <div>
+                    <h1 class="text-3xl font-bold tracking-tight text-foreground">School Information</h1>
+                    <p class="text-muted-foreground text-sm mt-1">Contact details, hours, and important resources</p>
+                </div>
+
+                <div class="grid lg:grid-cols-3 gap-8">
+                    <!-- Left Column -->
+                    <div class="lg:col-span-2 space-y-8">
+                        <!-- About Section -->
+                        <div class="rounded-2xl border border-border bg-card p-6 space-y-4">
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="info" class="h-5 w-5 text-accent"></i>
+                                <h2 class="text-xl font-bold">About Our School</h2>
+                            </div>
+                            <p class="text-muted-foreground text-sm leading-relaxed">
+                                Welcome to our educational institution. We are committed to providing quality education 
+                                and fostering a supportive learning environment for all students.
+                            </p>
+                            <div class="grid sm:grid-cols-2 gap-4 pt-2">
+                                <div class="p-4 rounded-xl bg-secondary/50">
+                                    <p class="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Founded</p>
+                                    <p class="text-lg font-bold">1990</p>
+                                </div>
+                                <div class="p-4 rounded-xl bg-secondary/50">
+                                    <p class="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Students</p>
+                                    <p class="text-lg font-bold">850+</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Contact Information -->
+                        <div class="rounded-2xl border border-border bg-card p-6 space-y-4">
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="phone" class="h-5 w-5 text-accent"></i>
+                                <h2 class="text-xl font-bold">Contact Information</h2>
+                            </div>
+                            <div class="space-y-3">
+                                <div class="flex items-start gap-3 p-3 rounded-xl bg-secondary/30">
+                                    <i data-lucide="map-pin" class="h-5 w-5 text-muted-foreground mt-0.5"></i>
+                                    <div>
+                                        <p class="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Address</p>
+                                        <p class="text-sm">123 School Street, City, Country 12345</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3 p-3 rounded-xl bg-secondary/30">
+                                    <i data-lucide="phone" class="h-5 w-5 text-muted-foreground mt-0.5"></i>
+                                    <div>
+                                        <p class="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Phone</p>
+                                        <p class="text-sm">+1 (234) 567-8900</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3 p-3 rounded-xl bg-secondary/30">
+                                    <i data-lucide="mail" class="h-5 w-5 text-muted-foreground mt-0.5"></i>
+                                    <div>
+                                        <p class="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Email</p>
+                                        <p class="text-sm">info@school.edu</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3 p-3 rounded-xl bg-secondary/30">
+                                    <i data-lucide="globe" class="h-5 w-5 text-muted-foreground mt-0.5"></i>
+                                    <div>
+                                        <p class="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Website</p>
+                                        <p class="text-sm">www.school.edu</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Staff Directory -->
+                        <div class="rounded-2xl border border-border bg-card p-6 space-y-4">
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="users" class="h-5 w-5 text-accent"></i>
+                                <h2 class="text-xl font-bold">Key Staff</h2>
+                            </div>
+                            <div class="space-y-3">
+                                <div class="flex items-center gap-4 p-3 rounded-xl bg-secondary/30">
+                                    <div class="h-10 w-10 rounded-full bg-accent/20 flex items-center justify-center">
+                                        <i data-lucide="user" class="h-5 w-5 text-accent"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="font-medium text-sm">Dr. Jane Smith</p>
+                                        <p class="text-xs text-muted-foreground">Principal</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-4 p-3 rounded-xl bg-secondary/30">
+                                    <div class="h-10 w-10 rounded-full bg-accent/20 flex items-center justify-center">
+                                        <i data-lucide="user" class="h-5 w-5 text-accent"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="font-medium text-sm">Mr. John Doe</p>
+                                        <p class="text-xs text-muted-foreground">Vice Principal</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-4 p-3 rounded-xl bg-secondary/30">
+                                    <div class="h-10 w-10 rounded-full bg-accent/20 flex items-center justify-center">
+                                        <i data-lucide="user" class="h-5 w-5 text-accent"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="font-medium text-sm">Mrs. Sarah Johnson</p>
+                                        <p class="text-xs text-muted-foreground">Head of Student Affairs</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div class="space-y-8">
+                        <!-- School Hours -->
+                        <div class="rounded-2xl border border-border bg-card p-6 space-y-4">
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="clock" class="h-5 w-5 text-accent"></i>
+                                <h2 class="text-xl font-bold">School Hours</h2>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex justify-between items-center py-2 border-b border-border">
+                                    <span class="text-sm text-muted-foreground">Monday - Friday</span>
+                                    <span class="text-sm font-medium">7:30 - 15:00</span>
+                                </div>
+                                <div class="flex justify-between items-center py-2 border-b border-border">
+                                    <span class="text-sm text-muted-foreground">Office Hours</span>
+                                    <span class="text-sm font-medium">7:00 - 16:00</span>
+                                </div>
+                                <div class="flex justify-between items-center py-2">
+                                    <span class="text-sm text-muted-foreground">Saturday - Sunday</span>
+                                    <span class="text-sm font-medium text-destructive">Closed</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Quick Links -->
+                        <div class="rounded-2xl border border-border bg-card p-6 space-y-4">
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="link" class="h-5 w-5 text-accent"></i>
+                                <h2 class="text-xl font-bold">Quick Links</h2>
+                            </div>
+                            <div class="space-y-2">
+                                <a href="#" class="flex items-center gap-3 p-3 rounded-xl bg-secondary/30 hover:bg-secondary/50">
+                                    <i data-lucide="calendar" class="h-4 w-4 text-muted-foreground"></i>
+                                    <span class="text-sm">Academic Calendar</span>
+                                </a>
+                                <a href="#" class="flex items-center gap-3 p-3 rounded-xl bg-secondary/30 hover:bg-secondary/50">
+                                    <i data-lucide="book-open" class="h-4 w-4 text-muted-foreground"></i>
+                                    <span class="text-sm">Student Handbook</span>
+                                </a>
+                                <a href="#" class="flex items-center gap-3 p-3 rounded-xl bg-secondary/30 hover:bg-secondary/50">
+                                    <i data-lucide="file-text" class="h-4 w-4 text-muted-foreground"></i>
+                                    <span class="text-sm">Forms & Documents</span>
+                                </a>
+                                <a href="#" class="flex items-center gap-3 p-3 rounded-xl bg-secondary/30 hover:bg-secondary/50">
+                                    <i data-lucide="help-circle" class="h-4 w-4 text-muted-foreground"></i>
+                                    <span class="text-sm">FAQ</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Emergency Contact -->
+                        <div class="rounded-2xl border border-destructive/30 bg-destructive/5 p-6 space-y-4">
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="alert-triangle" class="h-5 w-5 text-destructive"></i>
+                                <h2 class="text-xl font-bold">Emergency</h2>
+                            </div>
+                            <p class="text-sm text-muted-foreground">For emergencies during school hours, contact:</p>
+                            <div class="p-3 rounded-xl bg-destructive/10">
+                                <p class="text-lg font-bold text-destructive">+1 (234) 567-8911</p>
+                                <p class="text-xs text-muted-foreground">Available 24/7</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script type="module" src="/scripts/school-info.ts"></script>
+</body>
+</html>
